@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cài đặt kho</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">QUẢN LÝ KHO VẬT TƯ</div>
+      <div class="top-right">Kho trung tâm <span class="user">MA</span></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="warehouse">
+          <div class="label">Không gian làm việc</div>
+          <div class="warehouse-name">Kho trung tâm · Hà Nội</div>
+        </div>
+        <div class="nav-label">Quản lý kho</div>
+        <nav class="nav" aria-label="Điều hướng">
+          <a href="index.html">Tổng quan</a>
+          <a href="kho.html">Kho khác</a>
+          <a href="vat-tu.html">Vật tư</a>
+          <a href="phieu-nhap.html">Phiếu nhập</a>
+          <a href="phieu-xuat.html">Phiếu xuất</a>
+          <a href="kiem-ke.html">Kiểm kê</a>
+          <a href="nha-cung-cap.html">Nhà cung cấp</a>
+          <a href="bao-cao.html">Báo cáo</a>
+          <a class="active" href="cai-dat.html">Cài đặt</a>
+        </nav>
+      </aside>
+      <main>
+        <section class="banner">
+          <div>
+            <div class="eyebrow">Quản trị hệ thống</div>
+            <h1>Cài đặt kho</h1>
+            <p class="subtitle">Thông tin kho và quy tắc quản lý tồn.</p>
+          </div>
+        </section>
+        <section class="lower">
+          <div class="panel">
+            <div class="panel-title"><h2>Thông tin kho</h2></div>
+            <div class="form">
+              <div class="form-field">
+                <label>Tên kho</label><input value="Kho trung tâm" />
+              </div>
+              <div class="form-field">
+                <label>Mã kho</label><input value="KHO-HN-01" />
+              </div>
+              <div class="form-field">
+                <label>Địa chỉ</label><input value="Cầu Giấy, Hà Nội" />
+              </div>
+              <div class="form-field">
+                <label>Người phụ trách</label><input value="Trần Manh Huy" />
+              </div>
+              <div class="form-field">
+                <label>Đơn vị tiền tệ</label
+                ><select>
+                  <option>VND · Việt Nam đồng</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Múi giờ</label
+                ><select>
+                  <option>GMT+07:00 · Hà Nội</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title"><h2>Quy tắc tồn kho</h2></div>
+            <div class="form">
+              <div class="form-field">
+                <label>Định mức cảnh báo</label
+                ><input type="number" value="5" />
+              </div>
+              <div class="form-field">
+                <label>Phương pháp tính giá</label
+                ><select>
+                  <option>Bình quân gia quyền</option>
+                  <option>FIFO</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Duyệt phiếu xuất</label
+                ><select>
+                  <option>Bắt buộc</option>
+                  <option>Không bắt buộc</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Cho phép tồn âm</label
+                ><select>
+                  <option>Không</option>
+                  <option>Có</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      <span>Hệ thống quản lý kho vật tư</span><span>Cài đặt</span>
+    </footer>
+  </body>
+</html>

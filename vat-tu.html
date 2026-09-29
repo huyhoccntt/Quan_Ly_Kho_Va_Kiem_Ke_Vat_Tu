@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vật tư</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span>QUẢN LÝ KHO VẬT TƯ</span>
+      </div>
+      <div class="top-right">
+        <span>Kho trung tâm</span><span>Trần Manh Huy</span
+        ><span class="user">MA</span>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="warehouse">
+          <div class="label">Không gian làm việc</div>
+          <div class="warehouse-name">Kho trung tâm · Hà Nội</div>
+        </div>
+        <div class="nav-label">Quản lý kho</div>
+        <nav class="nav" aria-label="Điều hướng">
+          <a href="index.html">Tổng quan</a>
+          <a href="kho.html">Kho khác</a>
+          <a class="active" href="vat-tu.html">Vật tư</a>
+          <a href="phieu-nhap.html">Phiếu nhập</a>
+          <a href="phieu-xuat.html">Phiếu xuất</a>
+          <a href="kiem-ke.html">Kiểm kê</a>
+          <a href="nha-cung-cap.html">Nhà cung cấp</a>
+          <a href="bao-cao.html">Báo cáo</a>
+          <a href="cai-dat.html">Cài đặt</a>
+        </nav>
+      </aside>
+      <main>
+        <section class="banner">
+          <div>
+            <div class="eyebrow">Danh mục kho</div>
+            <h1>Vật tư</h1>
+            <p class="subtitle">
+              Mã hàng, vị trí lưu trữ và định mức tồn tối thiểu.
+            </p>
+          </div>
+          <div class="actions">
+            <a class="button primary" href="#add-item">+ Thêm vật tư</a>
+          </div>
+        </section>
+        <section class="metrics">
+          <div class="metric">
+            <div class="metric-label">Tổng mã vật tư</div>
+            <div class="metric-value">128</div>
+            <div class="metric-note">Trong 4 nhóm hàng</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Còn hàng</div>
+            <div class="metric-value">121</div>
+            <div class="metric-note">Đạt định mức tồn</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Dưới định mức</div>
+            <div class="metric-value">06</div>
+            <div class="metric-note">Cần bổ sung</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Hết hàng</div>
+            <div class="metric-value">01</div>
+            <div class="metric-note">Cần xử lý</div>
+          </div>
+        </section>
+        <section class="panel transaction-form" id="add-item">
+          <div class="panel-title">
+            <h2>Thêm vật tư vào danh mục</h2>
+            <p class="form-note">
+              Biểu mẫu giao diện · chưa kết nối lưu dữ liệu
+            </p>
+          </div>
+          <form class="form">
+            <div class="form-field">
+              <label for="item-code">Mã vật tư</label>
+              <input id="item-code" placeholder="VT-00129" />
+            </div>
+            <div class="form-field">
+              <label for="item-name">Tên vật tư</label>
+              <input id="item-name" placeholder="Tên hàng hóa" />
+            </div>
+            <div class="form-field">
+              <label for="item-group">Nhóm vật tư</label>
+              <select id="item-group">
+                <option>Điện công nghiệp</option>
+                <option>Cơ khí</option>
+                <option>Bảo hộ lao động</option>
+                <option>Văn phòng phẩm</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="item-location">Vị trí lưu trữ</label>
+              <input id="item-location" placeholder="Kệ A-01" />
+            </div>
+            <div class="form-field">
+              <label for="item-quantity">Số lượng ban đầu</label>
+              <input id="item-quantity" type="number" min="0" placeholder="0" />
+            </div>
+            <div class="form-field">
+              <label for="item-unit">Đơn vị tính</label>
+              <input id="item-unit" placeholder="Cái, hộp, cuộn..." />
+            </div>
+            <div class="form-field">
+              <label for="item-minimum">Định mức tối thiểu</label>
+              <input id="item-minimum" type="number" min="0" placeholder="5" />
+            </div>
+          </form>
+          <div class="form-actions">
+            <span class="form-note">Vật tư mới chưa được lưu vào kho.</span
+            ><button class="button" type="button" disabled>
+              Lưu vật tư (chưa khả dụng)
+            </button>
+          </div>
+        </section>
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>Danh mục hàng hóa</h2>
+              <div class="caption">Danh sách vật tư tại kho trung tâm.</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>MÃ VẬT TƯ</th>
+                  <th>TÊN VẬT TƯ</th>
+                  <th>NHÓM</th>
+                  <th>VỊ TRÍ</th>
+                  <th>TỒN KHO</th>
+                  <th>ĐỊNH MỨC</th>
+                  <th>TÌNH TRẠNG</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>VT-00124</td>
+                  <td class="product">Dây điện Cadivi 2.5mm</td>
+                  <td>Điện công nghiệp</td>
+                  <td>Kệ A-02</td>
+                  <td>148 cuộn</td>
+                  <td>40 cuộn</td>
+                  <td><span class="status good">Còn hàng</span></td>
+                </tr>
+                <tr>
+                  <td>VT-00087</td>
+                  <td class="product">Bu lông lục giác M10 x 50</td>
+                  <td>Cơ khí</td>
+                  <td>Kệ C-01</td>
+                  <td>18 cái</td>
+                  <td>50 cái</td>
+                  <td><span class="status low">Sắp hết</span></td>
+                </tr>
+                <tr>
+                  <td>VT-00056</td>
+                  <td class="product">Găng tay bảo hộ phủ PU</td>
+                  <td>Bảo hộ lao động</td>
+                  <td>Kệ B-04</td>
+                  <td>12 đôi</td>
+                  <td>30 đôi</td>
+                  <td><span class="status low">Sắp hết</span></td>
+                </tr>
+                <tr>
+                  <td>VT-00102</td>
+                  <td class="product">CB tép 2P 20A LS</td>
+                  <td>Điện công nghiệp</td>
+                  <td>Kệ A-01</td>
+                  <td>64 cái</td>
+                  <td>20 cái</td>
+                  <td><span class="status good">Còn hàng</span></td>
+                </tr>
+                <tr>
+                  <td>VT-00031</td>
+                  <td class="product">Băng keo cách điện Nano</td>
+                  <td>Điện công nghiệp</td>
+                  <td>Kệ A-05</td>
+                  <td>8 cuộn</td>
+                  <td>25 cuộn</td>
+                  <td><span class="status low">Sắp hết</span></td>
+                </tr>
+                <tr>
+                  <td>VT-00093</td>
+                  <td class="product">Mũi khoan thép HSS 8mm</td>
+                  <td>Cơ khí</td>
+                  <td>Kệ C-03</td>
+                  <td>0 cái</td>
+                  <td>10 cái</td>
+                  <td><span class="status empty">Hết hàng</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      <span>Hệ thống quản lý kho vật tư</span><span>Danh mục vật tư</span>
+    </footer>
+  </body>
+</html>

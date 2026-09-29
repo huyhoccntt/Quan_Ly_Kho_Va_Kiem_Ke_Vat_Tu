@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Báo cáo kho</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">QUẢN LÝ KHO VẬT TƯ</div>
+      <div class="top-right">Kho trung tâm <span class="user">MA</span></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="warehouse">
+          <div class="label">Không gian làm việc</div>
+          <div class="warehouse-name">Kho trung tâm · Hà Nội</div>
+        </div>
+        <div class="nav-label">Quản lý kho</div>
+        <nav class="nav" aria-label="Điều hướng">
+          <a href="index.html">Tổng quan</a>
+          <a href="kho.html">Kho khác</a>
+          <a href="vat-tu.html">Vật tư</a>
+          <a href="phieu-nhap.html">Phiếu nhập</a>
+          <a href="phieu-xuat.html">Phiếu xuất</a>
+          <a href="kiem-ke.html">Kiểm kê</a>
+          <a href="nha-cung-cap.html">Nhà cung cấp</a>
+          <a class="active" href="bao-cao.html">Báo cáo</a>
+          <a href="cai-dat.html">Cài đặt</a>
+        </nav>
+      </aside>
+      <main>
+        <section class="banner">
+          <div>
+            <div class="eyebrow">Phân tích vận hành</div>
+            <h1>Báo cáo kho</h1>
+            <p class="subtitle">Tổng hợp nhập, xuất và giá trị tồn kho.</p>
+          </div>
+        </section>
+        <section class="metrics">
+          <div class="metric">
+            <div class="metric-label">Tổng nhập tháng này</div>
+            <div class="metric-value">84,6 tr</div>
+            <div class="metric-note">36 phiếu nhập</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Tổng xuất tháng này</div>
+            <div class="metric-value">62,1 tr</div>
+            <div class="metric-note">52 phiếu xuất</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Giá trị tồn kho</div>
+            <div class="metric-value">486,2 tr</div>
+            <div class="metric-note">Tại thời điểm hiện tại</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Vòng quay tồn kho</div>
+            <div class="metric-value">3,8 lần</div>
+            <div class="metric-note">12 tháng gần nhất</div>
+          </div>
+        </section>
+        <section class="closing-report">
+          <div class="section-head">
+            <div>
+              <h2>Chốt kho cuối ngày</h2>
+              <div class="caption">
+                29/09/2026 · Kho trung tâm · Số liệu mẫu
+              </div>
+            </div>
+          </div>
+          <section class="metrics">
+            <div class="metric">
+              <div class="metric-label">Tồn đầu ngày</div>
+              <div class="metric-value">480,01 tr</div>
+              <div class="metric-note">Giá trị đầu ca</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Nhập trong ngày</div>
+              <div class="metric-value">15,42 tr</div>
+              <div class="metric-note">3 phiếu nhập</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Xuất trong ngày</div>
+              <div class="metric-value">9,23 tr</div>
+              <div class="metric-note">5 phiếu xuất</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Tồn cuối ngày</div>
+              <div class="metric-value">486,20 tr</div>
+              <div class="metric-note">Đã đối soát giao dịch</div>
+            </div>
+          </section>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>THỜI GIAN</th>
+                  <th>LOẠI GIAO DỊCH</th>
+                  <th>SỐ PHIẾU</th>
+                  <th>GIÁ TRỊ</th>
+                  <th>TRẠNG THÁI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>09:42</td>
+                  <td>Nhập kho · Thiết bị điện Minh Phát</td>
+                  <td>PN-2026-0084</td>
+                  <td>12.450.000 đ</td>
+                  <td><span class="status good">Đã xác nhận</span></td>
+                </tr>
+                <tr>
+                  <td>09:16</td>
+                  <td>Xuất kho · Bộ phận sản xuất</td>
+                  <td>PX-2026-0116</td>
+                  <td>2.180.000 đ</td>
+                  <td><span class="status good">Đã xác nhận</span></td>
+                </tr>
+                <tr>
+                  <td>08:50</td>
+                  <td>Kiểm kê · Kệ A-03</td>
+                  <td>KK-2026-004</td>
+                  <td>—</td>
+                  <td><span class="status low">Đang đối chiếu</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="lower">
+          <div class="panel">
+            <div class="panel-title"><h2>Tồn kho theo nhóm</h2></div>
+            <div class="stock-line">
+              <strong>Điện công nghiệp</strong
+              ><span class="stock-note">184 mã · 218,4 tr</span>
+            </div>
+            <div class="stock-line">
+              <strong>Cơ khí</strong
+              ><span class="stock-note">326 mã · 146,8 tr</span>
+            </div>
+            <div class="stock-line">
+              <strong>Bảo hộ lao động</strong
+              ><span class="stock-note">92 mã · 78,2 tr</span>
+            </div>
+            <div class="stock-line">
+              <strong>Văn phòng phẩm</strong
+              ><span class="stock-note">48 mã · 42,8 tr</span>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title"><h2>Cảnh báo tồn kho</h2></div>
+            <div class="stock-line">
+              <strong>Dưới định mức</strong
+              ><span class="status low">06 mã</span>
+            </div>
+            <div class="stock-line">
+              <strong>Hết hàng</strong><span class="status empty">01 mã</span>
+            </div>
+            <div class="stock-line">
+              <strong>Chưa kiểm kê</strong><span class="stock-note">14 mã</span>
+            </div>
+          </div>
+        </section>
+        <section class="report-transactions">
+          <div class="section-head">
+            <div>
+              <h2>Giao dịch gần nhất</h2>
+              <div class="caption">Tổng hợp phát sinh theo ngày.</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>NGÀY</th>
+                  <th>PHIẾU NHẬP</th>
+                  <th>GIÁ TRỊ NHẬP</th>
+                  <th>PHIẾU XUẤT</th>
+                  <th>GIÁ TRỊ XUẤT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>29/09/2026</td>
+                  <td>03</td>
+                  <td>15.420.000 đ</td>
+                  <td>05</td>
+                  <td>9.230.000 đ</td>
+                </tr>
+                <tr>
+                  <td>28/09/2026</td>
+                  <td>02</td>
+                  <td>8.760.000 đ</td>
+                  <td>04</td>
+                  <td>6.810.000 đ</td>
+                </tr>
+                <tr>
+                  <td>27/09/2026</td>
+                  <td>01</td>
+                  <td>3.280.000 đ</td>
+                  <td>03</td>
+                  <td>5.440.000 đ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      <span>Hệ thống quản lý kho vật tư</span><span>Báo cáo kho</span>
+    </footer>
+  </body>
+</html>

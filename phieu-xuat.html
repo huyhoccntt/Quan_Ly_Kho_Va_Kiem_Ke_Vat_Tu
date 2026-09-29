@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Phiếu xuất kho</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">QUẢN LÝ KHO VẬT TƯ</div>
+      <div class="top-right">Kho trung tâm <span class="user">MA</span></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="warehouse">
+          <div class="label">Không gian làm việc</div>
+          <div class="warehouse-name">Kho trung tâm · Hà Nội</div>
+        </div>
+        <div class="nav-label">Quản lý kho</div>
+        <nav class="nav" aria-label="Điều hướng">
+          <a href="index.html">Tổng quan</a>
+          <a href="kho.html">Kho khác</a>
+          <a href="vat-tu.html">Vật tư</a>
+          <a href="phieu-nhap.html">Phiếu nhập</a>
+          <a class="active" href="phieu-xuat.html">Phiếu xuất</a>
+          <a href="kiem-ke.html">Kiểm kê</a>
+          <a href="nha-cung-cap.html">Nhà cung cấp</a>
+          <a href="bao-cao.html">Báo cáo</a>
+          <a href="cai-dat.html">Cài đặt</a>
+        </nav>
+      </aside>
+      <main>
+        <section class="banner">
+          <div>
+            <div class="eyebrow">Giao dịch kho</div>
+            <h1>Phiếu xuất kho</h1>
+            <p class="subtitle">Yêu cầu cấp phát vật tư và lịch sử xuất kho.</p>
+          </div>
+          <div class="actions">
+            <button class="button primary" id="export-history" type="button">
+              Tải lịch sử CSV
+            </button>
+          </div>
+        </section>
+        <section class="metrics">
+          <div class="metric">
+            <div class="metric-label">Phiếu trong tháng</div>
+            <div class="metric-value">52</div>
+            <div class="metric-note">Tổng phiếu xuất</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Chờ duyệt</div>
+            <div class="metric-value">02</div>
+            <div class="metric-note">Cần quản lý xác nhận</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Đã hoàn tất</div>
+            <div class="metric-value">47</div>
+            <div class="metric-note">Đã trừ tồn kho</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Bộ phận nhận nhiều</div>
+            <div class="metric-value">Sản xuất</div>
+            <div class="metric-note">Tháng hiện tại</div>
+          </div>
+        </section>
+        <section class="panel transaction-form">
+          <div class="panel-title">
+            <h2>Tạo phiếu xuất</h2>
+            <p class="form-note">Phiếu được lưu trên trình duyệt này.</p>
+          </div>
+          <form class="form" id="outbound-form">
+            <div class="form-field">
+              <label for="issue-number">Số phiếu</label>
+              <input
+                id="issue-number"
+                name="number"
+                value="PX-2026-0118"
+                readonly
+              />
+            </div>
+            <div class="form-field">
+              <label for="issue-date">Ngày xuất</label>
+              <input
+                id="issue-date"
+                name="date"
+                type="date"
+                value="2026-09-29"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="issue-warehouse">Kho xuất</label>
+              <select id="issue-warehouse" name="warehouse">
+                <option>Kho trung tâm · Hà Nội</option>
+                <option>Kho miền Nam · TP. Hồ Chí Minh</option>
+                <option>Kho miền Trung · Đà Nẵng</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="issue-department">Bộ phận nhận</label>
+              <select id="issue-department" name="department" required>
+                <option value="">Chọn bộ phận nhận</option>
+                <option>Sản xuất</option>
+                <option>Bảo trì</option>
+                <option>Đóng gói</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="issue-requester">Người yêu cầu</label>
+              <input
+                id="issue-requester"
+                name="requester"
+                placeholder="Họ và tên"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="issue-approver">Người duyệt</label>
+              <input
+                id="issue-approver"
+                name="approver"
+                value="Trần Manh Huy"
+                readonly
+              />
+            </div>
+            <div class="form-field form-field-wide">
+              <label for="issue-items">Vật tư và số lượng cấp</label>
+              <textarea
+                id="issue-items"
+                name="items"
+                rows="3"
+                placeholder="Chọn vật tư · nhập số lượng · đơn vị"
+                required
+              ></textarea>
+            </div>
+            <div class="form-field form-field-wide">
+              <label for="issue-note">Ghi chú</label>
+              <input
+                id="issue-note"
+                name="note"
+                placeholder="Mục đích sử dụng hoặc mã yêu cầu"
+              />
+            </div>
+          </form>
+          <div class="form-actions">
+            <span class="form-note">Dữ liệu lưu cục bộ trên trình duyệt.</span
+            ><button class="button primary" type="submit" form="outbound-form">
+              Lưu phiếu xuất
+            </button>
+          </div>
+        </section>
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>Lịch sử phiếu xuất</h2>
+              <div class="caption">Các yêu cầu cấp phát gần nhất.</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>SỐ PHIẾU</th>
+                  <th>NGÀY XUẤT</th>
+                  <th>BỘ PHẬN NHẬN</th>
+                  <th>MẶT HÀNG</th>
+                  <th>NGƯỜI YÊU CẦU</th>
+                  <th>NGƯỜI DUYỆT</th>
+                  <th>TRẠNG THÁI</th>
+                  <th>THAO TÁC</th>
+                </tr>
+              </thead>
+              <tbody id="outbound-history">
+                <tr data-document-id="PX-2026-0117">
+                  <td>PX-2026-0117</td>
+                  <td>29/09/2026</td>
+                  <td>Sản xuất</td>
+                  <td>05</td>
+                  <td>Phạm Văn Long</td>
+                  <td>—</td>
+                  <td><span class="status low">Chờ duyệt</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <button
+                        class="button button-danger"
+                        type="button"
+                        data-action="delete"
+                      >
+                        Xóa
+                      </button>
+                      <button
+                        class="button"
+                        type="button"
+                        data-action="export-record"
+                      >
+                        Xuất
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr data-document-id="PX-2026-0116">
+                  <td>PX-2026-0116</td>
+                  <td>29/09/2026</td>
+                  <td>Bảo trì</td>
+                  <td>03</td>
+                  <td>Đỗ Hải Nam</td>
+                  <td>Trần Manh Huy</td>
+                  <td><span class="status good">Đã xuất</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <button
+                        class="button button-danger"
+                        type="button"
+                        data-action="delete"
+                      >
+                        Xóa
+                      </button>
+                      <button
+                        class="button"
+                        type="button"
+                        data-action="export-record"
+                      >
+                        Xuất
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr data-document-id="PX-2026-0115">
+                  <td>PX-2026-0115</td>
+                  <td>28/09/2026</td>
+                  <td>Sản xuất</td>
+                  <td>08</td>
+                  <td>Phạm Văn Long</td>
+                  <td>Trần Manh Huy</td>
+                  <td><span class="status good">Đã xuất</span></td>
+                  <td>
+                    <div class="row-actions">
+                      <button
+                        class="button button-danger"
+                        type="button"
+                        data-action="delete"
+                      >
+                        Xóa
+                      </button>
+                      <button
+                        class="button"
+                        type="button"
+                        data-action="export-record"
+                      >
+                        Xuất
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      <span>Hệ thống quản lý kho vật tư</span><span>Phiếu xuất</span>
+    </footer>
+    <script>
+      (() => {
+        const form = document.querySelector("#outbound-form");
+        const historyBody = document.querySelector("#outbound-history");
+        const exportButton = document.querySelector("#export-history");
+        const numberInput = document.querySelector("#issue-number");
+        const deletedKey = "inventory-manager.deleted-outbound.v1";
+        const createdKey = "inventory-manager.created-outbound.v1";
+
+        const readArray = (key) => {
+          try {
+            const value = JSON.parse(localStorage.getItem(key) || "[]");
+            return Array.isArray(value) ? value : [];
+          } catch {
+            return [];
+          }
+        };
+        const deletedDocuments = new Set(readArray(deletedKey));
+        const createdDocuments = readArray(createdKey);
+        const writeArray = (key, value) => {
+          try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+          } catch {
+            window.alert("Không thể lưu dữ liệu trên trình duyệt này.");
+            return false;
+          }
+        };
+        const csvHeaders = [
+          "Số phiếu",
+          "Ngày xuất",
+          "Bộ phận nhận",
+          "Số mặt hàng",
+          "Người yêu cầu",
+          "Người duyệt",
+          "Trạng thái",
+        ];
+        const addCell = (row, value) => {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.append(cell);
+        };
+        const addActions = (row) => {
+          const cell = document.createElement("td");
+          const actions = document.createElement("div");
+          actions.className = "row-actions";
+          [
+            ["delete", "Xóa", "button button-danger"],
+            ["export-record", "Xuất", "button"],
+          ].forEach(([action, label, className]) => {
+            const button = document.createElement("button");
+            button.className = className;
+            button.type = "button";
+            button.dataset.action = action;
+            button.textContent = label;
+            actions.append(button);
+          });
+          cell.append(actions);
+          row.append(cell);
+        };
+        const renderRecord = (record) => {
+          const row = document.createElement("tr");
+          row.dataset.documentId = record.number;
+          [
+            record.number,
+            record.date,
+            record.department,
+            record.itemCount,
+            record.requester,
+            record.approver,
+          ].forEach((value) => addCell(row, value));
+          const statusCell = document.createElement("td");
+          const status = document.createElement("span");
+          status.className = "status low";
+          status.textContent = record.status;
+          statusCell.append(status);
+          row.append(statusCell);
+          addActions(row);
+          historyBody.append(row);
+        };
+        const readRecord = (row) =>
+          [...row.cells]
+            .slice(0, csvHeaders.length)
+            .map((cell) => cell.textContent.trim());
+        const downloadCsv = (fileName, records) => {
+          const quote = (value) => `"${value.replaceAll('"', '""')}"`;
+          const csv = [csvHeaders, ...records]
+            .map((record) => record.map(quote).join(","))
+            .join("\r\n");
+          const fileUrl = URL.createObjectURL(
+            new Blob(["\ufeff", csv], { type: "text/csv;charset=utf-8" }),
+          );
+          const link = document.createElement("a");
+          link.href = fileUrl;
+          link.download = fileName;
+          link.click();
+          URL.revokeObjectURL(fileUrl);
+        };
+
+        historyBody.querySelectorAll("tr").forEach((row) => {
+          if (deletedDocuments.has(row.dataset.documentId)) row.remove();
+        });
+        createdDocuments.forEach((record) => {
+          if (!deletedDocuments.has(record.number)) renderRecord(record);
+        });
+
+        const nextNumber = () => {
+          const numbers = [
+            ...[...historyBody.querySelectorAll("tr")].map(
+              (row) => row.dataset.documentId,
+            ),
+            ...deletedDocuments,
+          ];
+          const highest = numbers.reduce((max, value) => {
+            const suffix = Number(value.match(/(\d+)$/)?.[1] || 0);
+            return Math.max(max, suffix);
+          }, 0);
+          return `PX-${new Date().getFullYear()}-${String(highest + 1).padStart(4, "0")}`;
+        };
+        numberInput.value = nextNumber();
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const values = new FormData(form);
+          const number = String(values.get("number"));
+          if (
+            [...historyBody.querySelectorAll("tr")].some(
+              (row) => row.dataset.documentId === number,
+            )
+          ) {
+            window.alert("Số phiếu đã tồn tại.");
+            return;
+          }
+          const itemLines = String(values.get("items"))
+            .split(/\r?\n/)
+            .filter((line) => line.trim());
+          const record = {
+            number,
+            date: String(values.get("date")),
+            department: String(values.get("department")),
+            itemCount: String(itemLines.length).padStart(2, "0"),
+            requester: String(values.get("requester")).trim(),
+            approver: String(values.get("approver")),
+            status: "Chờ duyệt",
+          };
+          const nextRecords = [...createdDocuments, record];
+          if (!writeArray(createdKey, nextRecords)) return;
+          createdDocuments.push(record);
+          renderRecord(record);
+          form.reset();
+          numberInput.value = nextNumber();
+          window.alert(`Đã lưu phiếu xuất ${number}.`);
+        });
+
+        historyBody.addEventListener("click", (event) => {
+          const target = event.target;
+          const button =
+            target instanceof Element ? target.closest("[data-action]") : null;
+          const row = button?.closest("tr");
+          const documentId = row?.dataset.documentId;
+
+          if (!row || !documentId) return;
+          if (button.dataset.action === "export-record") {
+            downloadCsv(`${documentId}.csv`, [readRecord(row)]);
+            return;
+          }
+          if (button.dataset.action !== "delete") return;
+          if (!window.confirm(`Bạn có chắc muốn xóa phiếu ${documentId}?`))
+            return;
+
+          const nextDeletedDocuments = new Set(deletedDocuments);
+          nextDeletedDocuments.add(documentId);
+          if (!writeArray(deletedKey, [...nextDeletedDocuments])) return;
+          deletedDocuments.add(documentId);
+          row.remove();
+        });
+
+        exportButton.addEventListener("click", () => {
+          const records = [...historyBody.querySelectorAll("tr")].map((row) =>
+            readRecord(row),
+          );
+          downloadCsv("lich-su-phieu-xuat.csv", records);
+        });
+      })();
+    </script>
+  </body>
+</html>

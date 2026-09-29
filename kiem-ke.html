@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Kiểm kê kho</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">QUẢN LÝ KHO VẬT TƯ</div>
+      <div class="top-right">Kho trung tâm <span class="user">MA</span></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="warehouse">
+          <div class="label">Không gian làm việc</div>
+          <div class="warehouse-name">Kho trung tâm · Hà Nội</div>
+        </div>
+        <div class="nav-label">Quản lý kho</div>
+        <nav class="nav" aria-label="Điều hướng">
+          <a href="index.html">Tổng quan</a>
+          <a href="kho.html">Kho khác</a>
+          <a href="vat-tu.html">Vật tư</a>
+          <a href="phieu-nhap.html">Phiếu nhập</a>
+          <a href="phieu-xuat.html">Phiếu xuất</a>
+          <a class="active" href="kiem-ke.html">Kiểm kê</a>
+          <a href="nha-cung-cap.html">Nhà cung cấp</a>
+          <a href="bao-cao.html">Báo cáo</a>
+          <a href="cai-dat.html">Cài đặt</a>
+        </nav>
+      </aside>
+      <main>
+        <section class="banner">
+          <div>
+            <div class="eyebrow">Đối soát tồn kho</div>
+            <h1>Kiểm kê</h1>
+            <p class="subtitle">
+              Đối chiếu số lượng thực tế với số liệu trên hệ thống.
+            </p>
+          </div>
+        </section>
+        <section class="metrics">
+          <div class="metric">
+            <div class="metric-label">Đợt kiểm kê tháng này</div>
+            <div class="metric-value">04</div>
+            <div class="metric-note">Tại kho trung tâm</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Đã hoàn tất</div>
+            <div class="metric-value">03</div>
+            <div class="metric-note">Đã đối chiếu</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Đang thực hiện</div>
+            <div class="metric-value">01</div>
+            <div class="metric-note">Khu B · bảo hộ</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Chênh lệch cần xử lý</div>
+            <div class="metric-value">02</div>
+            <div class="metric-note">Mã hàng cần xác nhận</div>
+          </div>
+        </section>
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>Các đợt kiểm kê</h2>
+              <div class="caption">
+                Tiến độ kiểm đếm và đối chiếu theo khu vực.
+              </div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>MÃ ĐỢT</th>
+                  <th>KHU VỰC</th>
+                  <th>NGÀY TẠO</th>
+                  <th>NGƯỜI PHỤ TRÁCH</th>
+                  <th>TIẾN ĐỘ</th>
+                  <th>CHÊNH LỆCH</th>
+                  <th>TRẠNG THÁI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>KK-2026-004</td>
+                  <td>Khu B · Bảo hộ lao động</td>
+                  <td>29/09/2026</td>
+                  <td>Trần Quốc Bảo</td>
+                  <td>18 / 32 mã</td>
+                  <td>—</td>
+                  <td><span class="status low">Đang thực hiện</span></td>
+                </tr>
+                <tr>
+                  <td>KK-2026-003</td>
+                  <td>Khu A · Điện công nghiệp</td>
+                  <td>24/09/2026</td>
+                  <td>Lê Thu Hà</td>
+                  <td>42 / 42 mã</td>
+                  <td>01 mã</td>
+                  <td><span class="status good">Hoàn tất</span></td>
+                </tr>
+                <tr>
+                  <td>KK-2026-002</td>
+                  <td>Khu C · Cơ khí</td>
+                  <td>16/09/2026</td>
+                  <td>Trần Manh Huy</td>
+                  <td>56 / 56 mã</td>
+                  <td>Không</td>
+                  <td><span class="status good">Hoàn tất</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      <span>Hệ thống quản lý kho vật tư</span><span>Kiểm kê</span>
+    </footer>
+  </body>
+</html>

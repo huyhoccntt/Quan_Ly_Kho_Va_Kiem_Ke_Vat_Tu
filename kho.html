@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kho hàng</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">QUẢN LÝ KHO VẬT TƯ</div>
+      <div class="top-right">
+        <span>Toàn hệ thống</span><span>Trần Manh Huy</span
+        ><span class="user">MA</span>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="warehouse">
+          <div class="label">Không gian làm việc</div>
+          <div class="warehouse-name">Toàn hệ thống</div>
+        </div>
+        <div class="nav-label">Quản lý kho</div>
+        <nav class="nav" aria-label="Điều hướng">
+          <a href="index.html">Tổng quan</a>
+          <a class="active" href="kho.html">Kho khác</a>
+          <a href="vat-tu.html">Vật tư</a>
+          <a href="phieu-nhap.html">Phiếu nhập</a>
+          <a href="phieu-xuat.html">Phiếu xuất</a>
+          <a href="kiem-ke.html">Kiểm kê</a>
+          <a href="nha-cung-cap.html">Nhà cung cấp</a>
+          <a href="bao-cao.html">Báo cáo</a>
+          <a href="cai-dat.html">Cài đặt</a>
+        </nav>
+      </aside>
+      <main>
+        <section class="banner">
+          <div>
+            <div class="eyebrow">Đa chi nhánh</div>
+            <h1>Kho hàng</h1>
+            <p class="subtitle">
+              Xem tồn kho và tình trạng vật tư tại từng địa điểm.
+            </p>
+          </div>
+          <div class="actions">
+            <a class="button" href="bao-cao.html">Báo cáo toàn hệ thống</a>
+          </div>
+        </section>
+        <section class="metrics">
+          <div class="metric">
+            <div class="metric-label">Tổng số kho</div>
+            <div class="metric-value">03</div>
+            <div class="metric-note">Tại 3 khu vực</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Mã vật tư toàn hệ thống</div>
+            <div class="metric-value">128</div>
+            <div class="metric-note">Danh mục hợp nhất</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Tổng giá trị tồn</div>
+            <div class="metric-value">1,24 tỷ</div>
+            <div class="metric-note">Số liệu mẫu</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Cảnh báo cần xử lý</div>
+            <div class="metric-value">09</div>
+            <div class="metric-note">Trên các kho</div>
+          </div>
+        </section>
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>Danh sách kho</h2>
+              <div class="caption">
+                Mở từng kho để xem vật tư. Số liệu minh họa.
+              </div>
+            </div>
+          </div>
+          <div class="warehouse-list">
+            <details open>
+              <summary>
+                <span class="warehouse-summary">
+                  Kho trung tâm · Hà Nội
+                  <small>KHO-HN-01 · Cầu Giấy</small>
+                </span>
+                <span class="status good">Đang hoạt động</span>
+              </summary>
+              <div class="warehouse-detail">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>MÃ VẬT TƯ</th>
+                      <th>TÊN VẬT TƯ</th>
+                      <th>VỊ TRÍ</th>
+                      <th>TỒN KHO</th>
+                      <th>TÌNH TRẠNG</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>VT-00124</td>
+                      <td>Dây điện Cadivi 2.5mm</td>
+                      <td>Kệ A-02</td>
+                      <td>148 cuộn</td>
+                      <td><span class="status good">Còn hàng</span></td>
+                    </tr>
+                    <tr>
+                      <td>VT-00087</td>
+                      <td>Bu lông lục giác M10 x 50</td>
+                      <td>Kệ C-01</td>
+                      <td>18 cái</td>
+                      <td><span class="status low">Sắp hết</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+            <details>
+              <summary>
+                <span class="warehouse-summary">
+                  Kho miền Nam · TP. Hồ Chí Minh
+                  <small>KHO-HCM-02 · Bình Tân</small>
+                </span>
+                <span class="status good">Đang hoạt động</span>
+              </summary>
+              <div class="warehouse-detail">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>MÃ VẬT TƯ</th>
+                      <th>TÊN VẬT TƯ</th>
+                      <th>VỊ TRÍ</th>
+                      <th>TỒN KHO</th>
+                      <th>TÌNH TRẠNG</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>VT-00124</td>
+                      <td>Dây điện Cadivi 2.5mm</td>
+                      <td>Kệ A-01</td>
+                      <td>86 cuộn</td>
+                      <td><span class="status good">Còn hàng</span></td>
+                    </tr>
+                    <tr>
+                      <td>VT-00056</td>
+                      <td>Găng tay bảo hộ phủ PU</td>
+                      <td>Kệ B-02</td>
+                      <td>14 đôi</td>
+                      <td><span class="status low">Sắp hết</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+            <details>
+              <summary>
+                <span class="warehouse-summary">
+                  Kho miền Trung · Đà Nẵng
+                  <small>KHO-DN-03 · Liên Chiểu</small>
+                </span>
+                <span class="status good">Đang hoạt động</span>
+              </summary>
+              <div class="warehouse-detail">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>MÃ VẬT TƯ</th>
+                      <th>TÊN VẬT TƯ</th>
+                      <th>VỊ TRÍ</th>
+                      <th>TỒN KHO</th>
+                      <th>TÌNH TRẠNG</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>VT-00102</td>
+                      <td>CB tép 2P 20A LS</td>
+                      <td>Kệ A-03</td>
+                      <td>39 cái</td>
+                      <td><span class="status good">Còn hàng</span></td>
+                    </tr>
+                    <tr>
+                      <td>VT-00093</td>
+                      <td>Mũi khoan thép HSS 8mm</td>
+                      <td>Kệ C-01</td>
+                      <td>4 cái</td>
+                      <td><span class="status low">Sắp hết</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      <span>Hệ thống quản lý kho vật tư</span><span>Toàn hệ thống</span>
+    </footer>
+  </body>
+</html>

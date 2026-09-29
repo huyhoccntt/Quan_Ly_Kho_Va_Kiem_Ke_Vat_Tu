@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Phiếu nhập kho</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">QUẢN LÝ KHO VẬT TƯ</div>
+      <div class="top-right">Kho trung tâm <span class="user">MA</span></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="warehouse">
+          <div class="label">Không gian làm việc</div>
+          <div class="warehouse-name">Kho trung tâm · Hà Nội</div>
+        </div>
+        <div class="nav-label">Quản lý kho</div>
+        <nav class="nav" aria-label="Điều hướng">
+          <a href="index.html">Tổng quan</a>
+          <a href="kho.html">Kho khác</a>
+          <a href="vat-tu.html">Vật tư</a>
+          <a class="active" href="phieu-nhap.html">Phiếu nhập</a>
+          <a href="phieu-xuat.html">Phiếu xuất</a>
+          <a href="kiem-ke.html">Kiểm kê</a>
+          <a href="nha-cung-cap.html">Nhà cung cấp</a>
+          <a href="bao-cao.html">Báo cáo</a>
+          <a href="cai-dat.html">Cài đặt</a>
+        </nav>
+      </aside>
+      <main>
+        <section class="banner">
+          <div>
+            <div class="eyebrow">Giao dịch kho</div>
+            <h1>Phiếu nhập kho</h1>
+            <p class="subtitle">
+              Hàng hóa nhận từ nhà cung cấp và trạng thái xác nhận.
+            </p>
+          </div>
+        </section>
+        <section class="metrics">
+          <div class="metric">
+            <div class="metric-label">Phiếu trong tháng</div>
+            <div class="metric-value">36</div>
+            <div class="metric-note">Tổng phiếu nhập</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Chờ xác nhận</div>
+            <div class="metric-value">02</div>
+            <div class="metric-note">Cần kiểm tra hàng</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Đã hoàn tất</div>
+            <div class="metric-value">31</div>
+            <div class="metric-note">Đã cập nhật tồn kho</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Tổng giá trị</div>
+            <div class="metric-value">84,6 tr</div>
+            <div class="metric-note">Tháng hiện tại</div>
+          </div>
+        </section>
+        <section class="panel transaction-form">
+          <div class="panel-title">
+            <h2>Tạo phiếu nhập</h2>
+            <p class="form-note">Phiếu được lưu trên trình duyệt này.</p>
+          </div>
+          <form class="form" id="receipt-form">
+            <div class="form-field">
+              <label for="receipt-number">Số phiếu</label>
+              <input
+                id="receipt-number"
+                name="number"
+                value="PN-2026-0085"
+                readonly
+              />
+            </div>
+            <div class="form-field">
+              <label for="receipt-date">Ngày nhập</label>
+              <input
+                id="receipt-date"
+                name="date"
+                type="date"
+                value="2026-09-29"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="receipt-supplier">Nhà cung cấp</label>
+              <select id="receipt-supplier" name="supplier" required>
+                <option value="">Chọn nhà cung cấp</option>
+                <option>Thiết bị điện Minh Phát</option>
+                <option>Cơ khí Thành Công</option>
+                <option>Bảo hộ An Toàn</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="receipt-warehouse">Kho nhận</label>
+              <select id="receipt-warehouse" name="warehouse">
+                <option>Kho trung tâm · Hà Nội</option>
+                <option>Kho miền Nam · TP. Hồ Chí Minh</option>
+                <option>Kho miền Trung · Đà Nẵng</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="receipt-value">Tổng giá trị (đồng)</label>
+              <input
+                id="receipt-value"
+                name="value"
+                type="number"
+                min="0"
+                step="1000"
+                placeholder="0"
+                required
+              />
+            </div>
+            <div class="form-field form-field-wide">
+              <label for="receipt-items">Vật tư và số lượng nhận</label>
+              <textarea
+                id="receipt-items"
+                name="items"
+                rows="3"
+                placeholder="Chọn vật tư · nhập số lượng · đơn vị"
+                required
+              ></textarea>
+            </div>
+            <div class="form-field form-field-wide">
+              <label for="receipt-note">Ghi chú</label>
+              <input
+                id="receipt-note"
+                name="note"
+                placeholder="Thông tin lô hàng hoặc hóa đơn"
+              />
+            </div>
+          </form>
+          <div class="form-actions">
+            <span class="form-note">Dữ liệu lưu cục bộ trên trình duyệt.</span
+            ><button class="button primary" type="submit" form="receipt-form">
+              Lưu phiếu nhập
+            </button>
+          </div>
+        </section>
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>Lịch sử phiếu nhập</h2>
+              <div class="caption">Các giao dịch nhập kho gần nhất.</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>SỐ PHIẾU</th>
+                  <th>NGÀY NHẬP</th>
+                  <th>NHÀ CUNG CẤP</th>
+                  <th>MẶT HÀNG</th>
+                  <th>GIÁ TRỊ</th>
+                  <th>NGƯỜI TẠO</th>
+                  <th>TRẠNG THÁI</th>
+                  <th>THAO TÁC</th>
+                </tr>
+              </thead>
+              <tbody id="receipt-history">
+                <tr data-document-id="PN-2026-0084">
+                  <td>PN-2026-0084</td>
+                  <td>29/09/2026</td>
+                  <td>Thiết bị điện Minh Phát</td>
+                  <td>06</td>
+                  <td>12.450.000 đ</td>
+                  <td>Trần Quốc Bảo</td>
+                  <td><span class="status low">Chờ xác nhận</span></td>
+                  <td>
+                    <button
+                      class="button button-danger"
+                      type="button"
+                      data-action="delete"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr data-document-id="PN-2026-0083">
+                  <td>PN-2026-0083</td>
+                  <td>28/09/2026</td>
+                  <td>Cơ khí Thành Công</td>
+                  <td>12</td>
+                  <td>8.760.000 đ</td>
+                  <td>Trần Manh Huy</td>
+                  <td><span class="status good">Hoàn tất</span></td>
+                  <td>
+                    <button
+                      class="button button-danger"
+                      type="button"
+                      data-action="delete"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr data-document-id="PN-2026-0082">
+                  <td>PN-2026-0082</td>
+                  <td>26/09/2026</td>
+                  <td>Bảo hộ An Toàn</td>
+                  <td>04</td>
+                  <td>3.280.000 đ</td>
+                  <td>Trần Quốc Bảo</td>
+                  <td><span class="status good">Hoàn tất</span></td>
+                  <td>
+                    <button
+                      class="button button-danger"
+                      type="button"
+                      data-action="delete"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      <span>Hệ thống quản lý kho vật tư</span><span>Phiếu nhập</span>
+    </footer>
+    <script>
+      (() => {
+        const form = document.querySelector("#receipt-form");
+        const historyBody = document.querySelector("#receipt-history");
+        const numberInput = document.querySelector("#receipt-number");
+        const deletedKey = "inventory-manager.deleted-receipts.v1";
+        const createdKey = "inventory-manager.created-receipts.v1";
+        const userName = "Trần Manh Huy";
+
+        const readArray = (key) => {
+          try {
+            const value = JSON.parse(localStorage.getItem(key) || "[]");
+            return Array.isArray(value) ? value : [];
+          } catch {
+            return [];
+          }
+        };
+        const deletedIds = new Set(readArray(deletedKey));
+        const createdRecords = readArray(createdKey);
+        const writeArray = (key, value) => {
+          try {
+            localStorage.setItem(key, JSON.stringify(value));
+          } catch {
+            window.alert("Không thể lưu dữ liệu trên trình duyệt này.");
+          }
+        };
+        const addCell = (row, value) => {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.append(cell);
+        };
+        const addDeleteAction = (row) => {
+          const cell = document.createElement("td");
+          const button = document.createElement("button");
+          button.className = "button button-danger";
+          button.type = "button";
+          button.dataset.action = "delete";
+          button.textContent = "Xóa";
+          cell.append(button);
+          row.append(cell);
+        };
+        const renderRecord = (record) => {
+          const row = document.createElement("tr");
+          row.dataset.documentId = record.number;
+          [
+            record.number,
+            record.date,
+            record.supplier,
+            record.itemCount,
+            record.value,
+            record.creator,
+          ].forEach((value) => addCell(row, value));
+          const statusCell = document.createElement("td");
+          const status = document.createElement("span");
+          status.className = "status low";
+          status.textContent = "Chờ xác nhận";
+          statusCell.append(status);
+          row.append(statusCell);
+          addDeleteAction(row);
+          historyBody.append(row);
+        };
+
+        historyBody.querySelectorAll("tr").forEach((row) => {
+          if (deletedIds.has(row.dataset.documentId)) row.remove();
+        });
+        createdRecords.forEach((record) => {
+          if (!deletedIds.has(record.number)) renderRecord(record);
+        });
+
+        const nextNumber = () => {
+          const numbers = [
+            ...[...historyBody.querySelectorAll("tr")].map(
+              (row) => row.dataset.documentId,
+            ),
+            ...deletedIds,
+          ];
+          const highest = numbers.reduce((max, value) => {
+            const suffix = Number(value.match(/(\d+)$/)?.[1] || 0);
+            return Math.max(max, suffix);
+          }, 84);
+          return `PN-${new Date().getFullYear()}-${String(highest + 1).padStart(4, "0")}`;
+        };
+        numberInput.value = nextNumber();
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const values = new FormData(form);
+          const number = String(values.get("number"));
+          if (
+            [...historyBody.querySelectorAll("tr")].some(
+              (row) => row.dataset.documentId === number,
+            )
+          ) {
+            window.alert("Số phiếu đã tồn tại.");
+            return;
+          }
+
+          const itemLines = String(values.get("items"))
+            .split(/\r?\n/)
+            .filter((line) => line.trim());
+          const record = {
+            number,
+            date: String(values.get("date")),
+            supplier: String(values.get("supplier")),
+            itemCount: String(itemLines.length).padStart(2, "0"),
+            value: `${new Intl.NumberFormat("vi-VN").format(Number(values.get("value")))} đ`,
+            creator: userName,
+          };
+          createdRecords.push(record);
+          writeArray(createdKey, createdRecords);
+          renderRecord(record);
+          form.reset();
+          numberInput.value = nextNumber();
+          window.alert(`Đã lưu phiếu nhập ${number}.`);
+        });
+
+        historyBody.addEventListener("click", (event) => {
+          const target = event.target;
+          const button =
+            target instanceof Element
+              ? target.closest('[data-action="delete"]')
+              : null;
+          const row = button?.closest("tr");
+          const number = row?.dataset.documentId;
+          if (!row || !number) return;
+          if (!window.confirm(`Xóa phiếu nhập ${number}?`)) return;
+
+          deletedIds.add(number);
+          writeArray(deletedKey, [...deletedIds]);
+          row.remove();
+        });
+      })();
+    </script>
+  </body>
+</html>

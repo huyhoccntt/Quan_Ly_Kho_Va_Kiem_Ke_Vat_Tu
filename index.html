@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tổng quan kho vật tư</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span>QUẢN LÝ KHO VẬT TƯ</span>
+      </div>
+      <div class="top-right">
+        <span class="top-date" id="today"></span><span>Trần Manh Huy</span
+        ><span class="user">MA</span>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="warehouse">
+          <div class="label">Không gian làm việc</div>
+          <div class="warehouse-name">Kho trung tâm · Hà Nội</div>
+        </div>
+        <div class="nav-label">Quản lý kho</div>
+        <nav class="nav" aria-label="Điều hướng">
+          <a class="active" href="index.html">Tổng quan</a>
+          <a href="kho.html">Kho khác</a>
+          <a href="vat-tu.html">Vật tư</a>
+          <a href="phieu-nhap.html">Phiếu nhập</a>
+          <a href="phieu-xuat.html">Phiếu xuất</a>
+          <a href="kiem-ke.html">Kiểm kê</a>
+          <a href="nha-cung-cap.html">Nhà cung cấp</a>
+          <a href="bao-cao.html">Báo cáo</a>
+          <a href="cai-dat.html">Cài đặt</a>
+        </nav>
+      </aside>
+      <main>
+        <section class="banner">
+          <div>
+            <div class="eyebrow">Thứ Ba · Kho trung tâm</div>
+            <h1>Tổng quan kho</h1>
+            <p class="subtitle">
+              Theo dõi vật tư, số lượng tồn và hoạt động kho trong ngày.
+            </p>
+          </div>
+          <div class="actions">
+            <a class="button" href="bao-cao.html">Xem báo cáo</a
+            ><a class="button primary" href="vat-tu.html">Danh mục vật tư</a>
+          </div>
+        </section>
+        <section class="metrics">
+          <div class="metric">
+            <div class="metric-label">Tổng mã vật tư</div>
+            <div class="metric-value" id="product-count">128</div>
+            <div class="metric-note">
+              <span class="up">+6</span> mã mới trong tháng
+            </div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Giá trị tồn kho</div>
+            <div class="metric-value">486,2 tr</div>
+            <div class="metric-note">Theo giá nhập gần nhất</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Sắp hết hàng</div>
+            <div class="metric-value" id="low-count">07</div>
+            <div class="metric-note">
+              <span class="warn">Cần bổ sung</span> dưới định mức
+            </div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Chờ xác nhận</div>
+            <div class="metric-value">04</div>
+            <div class="metric-note">2 phiếu nhập · 2 phiếu xuất</div>
+          </div>
+        </section>
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>Tồn kho vật tư</h2>
+              <div class="caption">Danh sách hàng hóa tại kho trung tâm.</div>
+            </div>
+            <a class="link" href="vat-tu.html">Xem toàn bộ danh mục →</a>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>MÃ VẬT TƯ</th>
+                  <th>TÊN VẬT TƯ</th>
+                  <th>NHÓM</th>
+                  <th>VỊ TRÍ</th>
+                  <th>TỒN KHO</th>
+                  <th>ĐỊNH MỨC</th>
+                  <th>TÌNH TRẠNG</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>VT-00124</td>
+                  <td>
+                    <div class="product">Dây điện Cadivi 2.5mm</div>
+                    <div class="sku">cuộn</div>
+                  </td>
+                  <td>Điện công nghiệp</td>
+                  <td>Kệ A-02</td>
+                  <td><span class="qty">148</span> cuộn</td>
+                  <td>40 cuộn</td>
+                  <td><span class="status good">Còn hàng</span></td>
+                </tr>
+                <tr>
+                  <td>VT-00087</td>
+                  <td>
+                    <div class="product">Bu lông lục giác M10 x 50</div>
+                    <div class="sku">cái</div>
+                  </td>
+                  <td>Cơ khí</td>
+                  <td>Kệ C-01</td>
+                  <td><span class="qty">18</span> cái</td>
+                  <td>50 cái</td>
+                  <td><span class="status low">Sắp hết</span></td>
+                </tr>
+                <tr>
+                  <td>VT-00056</td>
+                  <td>
+                    <div class="product">Găng tay bảo hộ phủ PU</div>
+                    <div class="sku">đôi</div>
+                  </td>
+                  <td>Bảo hộ lao động</td>
+                  <td>Kệ B-04</td>
+                  <td><span class="qty">12</span> đôi</td>
+                  <td>30 đôi</td>
+                  <td><span class="status low">Sắp hết</span></td>
+                </tr>
+                <tr>
+                  <td>VT-00102</td>
+                  <td>
+                    <div class="product">CB tép 2P 20A LS</div>
+                    <div class="sku">cái</div>
+                  </td>
+                  <td>Điện công nghiệp</td>
+                  <td>Kệ A-01</td>
+                  <td><span class="qty">64</span> cái</td>
+                  <td>20 cái</td>
+                  <td><span class="status good">Còn hàng</span></td>
+                </tr>
+                <tr>
+                  <td>VT-00093</td>
+                  <td>
+                    <div class="product">Mũi khoan thép HSS 8mm</div>
+                    <div class="sku">cái</div>
+                  </td>
+                  <td>Cơ khí</td>
+                  <td>Kệ C-03</td>
+                  <td><span class="qty">0</span> cái</td>
+                  <td>10 cái</td>
+                  <td><span class="status empty">Hết hàng</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="lower">
+          <div class="panel">
+            <div class="panel-title"><h2>Hoạt động gần đây</h2></div>
+            <div class="activity">
+              <span class="time">09:42</span
+              ><span
+                ><span class="type">NHẬP KHO</span> · Dây điện Cadivi
+                2.5mm</span
+              ><strong>+120 cuộn</strong>
+            </div>
+            <div class="activity">
+              <span class="time">09:16</span
+              ><span
+                ><span class="type out">XUẤT KHO</span> · Găng tay bảo hộ</span
+              ><strong>-24 đôi</strong>
+            </div>
+            <div class="activity">
+              <span class="time">08:50</span
+              ><span
+                ><span class="type">KIỂM KÊ</span> · Kệ A-03, khu cơ khí</span
+              ><strong>Hoàn tất</strong>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title"><h2>Cần bổ sung</h2></div>
+            <div class="stock-line">
+              <strong>Bu lông M10 x 50</strong
+              ><span class="stock-note">18 / 50 cái</span>
+            </div>
+            <div class="stock-line">
+              <strong>Găng tay bảo hộ</strong
+              ><span class="stock-note">12 / 30 đôi</span>
+            </div>
+            <div class="stock-line">
+              <strong>Băng keo cách điện</strong
+              ><span class="stock-note">8 / 25 cuộn</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      <span>Hệ thống quản lý kho vật tư</span><span>Kho trung tâm · 2026</span>
+    </footer>
+  </body>
+</html>
