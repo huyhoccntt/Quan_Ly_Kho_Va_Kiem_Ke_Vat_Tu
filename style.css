@@ -176,6 +176,7 @@ main {
   border: 1px solid #d6e0d5;
   background: #e8efe7;
 }
+
 .eyebrow {
   margin-bottom: 3px;
   color: var(--green);
@@ -200,10 +201,14 @@ h1 {
   flex-shrink: 0;
 }
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: 31px;
   padding: 0 10px;
   border: 1px solid var(--line);
   background: #fff;
+  text-align: center;
   font-size: 10px;
   font-weight: 500;
 }
@@ -647,6 +652,7 @@ tbody tr:hover {
     align-items: flex-start;
     padding: 11px;
   }
+
   .subtitle {
     max-width: 220px;
     line-height: 1.4;
