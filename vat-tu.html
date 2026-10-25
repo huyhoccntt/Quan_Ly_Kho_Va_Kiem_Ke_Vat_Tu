@@ -50,6 +50,7 @@
             </p>
           </div>
           <div class="actions">
+            <button class="button" id="export-inventory" type="button">Xuất danh mục CSV</button>
             <a class="button primary" href="#add-item">+ Thêm vật tư</a>
           </div>
         </section>
@@ -82,14 +83,14 @@
               Biểu mẫu giao diện · chưa kết nối lưu dữ liệu
             </p>
           </div>
-          <form class="form">
+          <form class="form" id="item-form">
             <div class="form-field">
               <label for="item-code">Mã vật tư</label>
-              <input id="item-code" placeholder="VT-00129" />
+              <input id="item-code" placeholder="VT-00129" required />
             </div>
             <div class="form-field">
               <label for="item-name">Tên vật tư</label>
-              <input id="item-name" placeholder="Tên hàng hóa" />
+              <input id="item-name" placeholder="Tên hàng hóa" required />
             </div>
             <div class="form-field">
               <label for="item-group">Nhóm vật tư</label>
@@ -102,25 +103,25 @@
             </div>
             <div class="form-field">
               <label for="item-location">Vị trí lưu trữ</label>
-              <input id="item-location" placeholder="Kệ A-01" />
+              <input id="item-location" placeholder="Kệ A-01" required />
             </div>
             <div class="form-field">
               <label for="item-quantity">Số lượng ban đầu</label>
-              <input id="item-quantity" type="number" min="0" placeholder="0" />
+              <input id="item-quantity" type="number" min="0" placeholder="0" required />
             </div>
             <div class="form-field">
               <label for="item-unit">Đơn vị tính</label>
-              <input id="item-unit" placeholder="Cái, hộp, cuộn..." />
+              <input id="item-unit" placeholder="Cái, hộp, cuộn..." required />
             </div>
             <div class="form-field">
               <label for="item-minimum">Định mức tối thiểu</label>
-              <input id="item-minimum" type="number" min="0" placeholder="5" />
+              <input id="item-minimum" type="number" min="0" placeholder="5" required />
             </div>
           </form>
           <div class="form-actions">
             <span class="form-note">Vật tư mới chưa được lưu vào kho.</span
-            ><button class="button" type="button" disabled>
-              Lưu vật tư (chưa khả dụng)
+            ><button class="button primary" type="submit" form="item-form">
+              Lưu vật tư
             </button>
           </div>
         </section>
@@ -144,7 +145,7 @@
                   <th>TÌNH TRẠNG</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="inventory-list">
                 <tr>
                   <td>VT-00124</td>
                   <td class="product">Dây điện Cadivi 2.5mm</td>

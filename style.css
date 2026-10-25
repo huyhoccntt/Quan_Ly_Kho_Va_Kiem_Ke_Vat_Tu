@@ -176,6 +176,33 @@ main {
   border: 1px solid #d6e0d5;
   background: #e8efe7;
 }
+.stocktake-banner {
+  flex-wrap: wrap;
+  gap: 14px 24px;
+}
+.stocktake-banner-copy {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.stocktake-banner .subtitle {
+  max-width: none;
+}
+.stocktake-banner-actions {
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.stocktake-banner-actions .button {
+  min-height: 36px;
+  padding: 0 12px;
+  color: var(--ink);
+  font-size: 12px;
+  text-decoration: none;
+}
+.stocktake-banner-actions .button.primary {
+  color: #fff;
+}
 
 .eyebrow {
   margin-bottom: 3px;
@@ -214,6 +241,31 @@ h1 {
 }
 .button:hover {
   background: #f4f6f2;
+}
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.stocktake-detail {
+  margin-top: 14px;
+}
+.stocktake-detail-title,
+.stocktake-detail-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.stocktake-detail-title .form-note {
+  margin: 3px 0 0;
+}
+.stocktake-detail-actions {
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+}
+.stocktake-count-input {
+  width: 120px;
 }
 .button-danger {
   border-color: #e8cfcc;
@@ -558,6 +610,55 @@ tbody tr:hover {
   padding: 8px;
   resize: vertical;
 }
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #f4f5f2;
+}
+.login-card {
+  width: min(440px, 100%);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.login-card > .eyebrow,
+.login-card > h1,
+.login-card > .subtitle,
+.login-note {
+  margin-right: 18px;
+  margin-left: 18px;
+}
+.login-card > .eyebrow {
+  margin-top: 20px;
+}
+.login-card > h1 {
+  font-size: 22px;
+}
+.login-form {
+  grid-template-columns: 1fr;
+}
+.login-form .button {
+  width: 100%;
+}
+.login-error {
+  margin: 0;
+  color: var(--red);
+  font-size: 13px;
+}
+.login-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+[hidden] {
+  display: none !important;
+}
 .transaction-form {
   margin-bottom: 16px;
 }
@@ -659,6 +760,9 @@ tbody tr:hover {
   }
   .actions .button:not(.primary) {
     display: none;
+  }
+  .stocktake-banner-actions .button:not(.primary) {
+    display: inline-flex;
   }
   h1 {
     font-size: 17px;

@@ -59,7 +59,7 @@
           </div>
           <div class="metric">
             <div class="metric-label">Mã vật tư toàn hệ thống</div>
-            <div class="metric-value">128</div>
+            <div class="metric-value" id="warehouse-item-count">06</div>
             <div class="metric-note">Danh mục hợp nhất</div>
           </div>
           <div class="metric">
@@ -78,12 +78,12 @@
             <div>
               <h2>Danh sách kho</h2>
               <div class="caption">
-                Mở từng kho để xem vật tư. Số liệu minh họa.
+                Mở từng kho để xem toàn bộ danh mục vật tư. Mặt hàng chưa có số liệu tồn sẽ được ghi rõ.
               </div>
             </div>
           </div>
           <div class="warehouse-list">
-            <details open>
+            <details open data-warehouse-code="KHO-HN-01">
               <summary>
                 <span class="warehouse-summary">
                   Kho trung tâm · Hà Nội
@@ -102,7 +102,7 @@
                       <th>TÌNH TRẠNG</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="warehouse-hn-stock">
                     <tr>
                       <td>VT-00124</td>
                       <td>Dây điện Cadivi 2.5mm</td>
@@ -117,11 +117,39 @@
                       <td>18 cái</td>
                       <td><span class="status low">Sắp hết</span></td>
                     </tr>
+                    <tr>
+                      <td>VT-00056</td>
+                      <td>Găng tay bảo hộ phủ PU</td>
+                      <td>Kệ B-04</td>
+                      <td>12 đôi</td>
+                      <td><span class="status low">Sắp hết</span></td>
+                    </tr>
+                    <tr>
+                      <td>VT-00102</td>
+                      <td>CB tép 2P 20A LS</td>
+                      <td>Kệ A-01</td>
+                      <td>64 cái</td>
+                      <td><span class="status good">Còn hàng</span></td>
+                    </tr>
+                    <tr>
+                      <td>VT-00031</td>
+                      <td>Băng keo cách điện Nano</td>
+                      <td>Kệ A-05</td>
+                      <td>8 cuộn</td>
+                      <td><span class="status low">Sắp hết</span></td>
+                    </tr>
+                    <tr>
+                      <td>VT-00093</td>
+                      <td>Mũi khoan thép HSS 8mm</td>
+                      <td>Kệ C-03</td>
+                      <td>0 cái</td>
+                      <td><span class="status empty">Hết hàng</span></td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
             </details>
-            <details>
+            <details data-warehouse-code="KHO-HCM-02">
               <summary>
                 <span class="warehouse-summary">
                   Kho miền Nam · TP. Hồ Chí Minh
@@ -140,7 +168,7 @@
                       <th>TÌNH TRẠNG</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="warehouse-hcm-stock">
                     <tr>
                       <td>VT-00124</td>
                       <td>Dây điện Cadivi 2.5mm</td>
@@ -159,7 +187,7 @@
                 </table>
               </div>
             </details>
-            <details>
+            <details data-warehouse-code="KHO-DN-03">
               <summary>
                 <span class="warehouse-summary">
                   Kho miền Trung · Đà Nẵng
@@ -178,7 +206,7 @@
                       <th>TÌNH TRẠNG</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="warehouse-dn-stock">
                     <tr>
                       <td>VT-00102</td>
                       <td>CB tép 2P 20A LS</td>
