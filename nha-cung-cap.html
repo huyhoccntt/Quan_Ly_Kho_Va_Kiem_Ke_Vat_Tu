@@ -72,7 +72,7 @@
         </section>
         <section class="panel transaction-form" id="add-supplier">
           <div class="panel-title">
-            <h2>Thêm nhà cung cấp</h2>
+            <h2 id="supplier-form-title">Thêm nhà cung cấp</h2>
             <p class="form-note">Thông tin được lưu trên trình duyệt này.</p>
           </div>
           <form class="form" id="supplier-form">
@@ -98,7 +98,14 @@
             </div>
             <div class="form-field form-field-wide form-actions">
               <span class="form-note">Mã nhà cung cấp sẽ được tạo tự động.</span>
-              <button class="button primary" type="submit">Lưu nhà cung cấp</button>
+              <div class="row-actions">
+                <button class="button" type="button" id="cancel-supplier-edit" hidden>
+                  Hủy sửa
+                </button>
+                <button class="button primary" type="submit" id="save-supplier">
+                  Lưu nhà cung cấp
+                </button>
+              </div>
             </div>
           </form>
         </section>
@@ -120,8 +127,10 @@
                   <th>NHÓM HÀNG</th>
                   <th>NGƯỜI LIÊN HỆ</th>
                   <th>ĐIỆN THOẠI</th>
+                  <th>EMAIL</th>
                   <th>PHIẾU NHẬP</th>
                   <th>TRẠNG THÁI</th>
+                  <th>THAO TÁC</th>
                 </tr>
               </thead>
               <tbody id="supplier-list">
@@ -131,8 +140,10 @@
                   <td>Điện công nghiệp</td>
                   <td>Nguyễn Văn Hùng</td>
                   <td>024 3822 1040</td>
+                  <td>—</td>
                   <td>18</td>
                   <td><span class="status good">Đang hợp tác</span></td>
+                  <td></td>
                 </tr>
                 <tr>
                   <td>NCC-002</td>
@@ -140,8 +151,10 @@
                   <td>Cơ khí</td>
                   <td>Trần Quốc Việt</td>
                   <td>024 3765 8821</td>
+                  <td>—</td>
                   <td>12</td>
                   <td><span class="status good">Đang hợp tác</span></td>
+                  <td></td>
                 </tr>
                 <tr>
                   <td>NCC-003</td>
@@ -149,8 +162,10 @@
                   <td>Bảo hộ lao động</td>
                   <td>Lê Thị Hương</td>
                   <td>024 3991 2250</td>
+                  <td>—</td>
                   <td>09</td>
                   <td><span class="status good">Đang hợp tác</span></td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>

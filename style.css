@@ -662,6 +662,12 @@ tbody tr:hover {
 .transaction-form {
   margin-bottom: 16px;
 }
+.transaction-form > .panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
 .form-note {
   margin: 0;
   color: var(--muted);
@@ -673,6 +679,71 @@ tbody tr:hover {
   justify-content: space-between;
   gap: 12px;
   padding: 0 15px 12px;
+}
+.document-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 0 13px;
+  border-bottom: 1px solid #aeb8ad;
+}
+.document-organization {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.document-warehouse {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.document-title {
+  min-width: 190px;
+  text-align: center;
+}
+.document-title h3 {
+  margin: 0;
+  font-size: 17px;
+  letter-spacing: 0.6px;
+}
+.document-title span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.document-items-detail td {
+  padding: 10px 14px;
+  background: #f7f8f5;
+  color: #505950;
+  font-size: 13px;
+}
+.document-items-detail ol {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 22px;
+}
+.document-items-note {
+  margin: 0 0 7px;
+  color: var(--amber);
+  font-size: 11px;
+  font-weight: 600;
+}
+.voucher-item-count {
+  margin-bottom: 4px;
+  color: #505950;
+  font-size: 11px;
+  font-weight: 600;
+}
+.voucher-items-list {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding-left: 18px;
+  color: #505950;
+  font-size: 12px;
 }
 .button:disabled {
   cursor: not-allowed;
@@ -786,6 +857,73 @@ tbody tr:hover {
   }
   .footer {
     padding: 0 10px;
+  }
+  .document-heading {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .document-title {
+    min-width: 0;
+    width: 100%;
+    text-align: left;
+  }
+}
+@page {
+  size: A4 portrait;
+  margin: 14mm;
+}
+@media print {
+  body {
+    min-width: 0;
+    background: #fff;
+    color: #000;
+  }
+  .topbar,
+  .sidebar,
+  .footer,
+  main > :not(.transaction-form),
+  .transaction-form > .panel-title,
+  .form-actions {
+    display: none !important;
+  }
+  .layout {
+    display: block;
+    min-height: 0;
+  }
+  main {
+    padding: 0;
+  }
+  .transaction-form {
+    margin: 0;
+    border: 0;
+  }
+  .form {
+    gap: 12px 16px;
+    padding: 0;
+  }
+  .form-field label {
+    color: #000;
+  }
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    border: 0;
+    border-bottom: 1px solid #777;
+    background: transparent;
+    color: #000;
+    appearance: none;
+  }
+  .form-field textarea {
+    min-height: 90px;
+  }
+  .document-heading {
+    padding-top: 0;
+    border-bottom: 1px solid #333;
+  }
+  .document-warehouse,
+  .document-title span,
+  .signature span {
+    color: #333;
   }
 }
 .report-transactions {

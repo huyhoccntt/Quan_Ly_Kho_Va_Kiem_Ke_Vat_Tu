@@ -130,8 +130,8 @@
                   <td>Khu B · Bảo hộ lao động</td>
                   <td>29/09/2026</td>
                   <td>Trần Quốc Bảo</td>
-                  <td>0 / 6 mã</td>
-                  <td>—</td>
+                  <td>5 / 6 mã</td>
+                  <td>04 mã</td>
                   <td><span class="status low">Đang thực hiện</span></td>
                 </tr>
                 <tr>
@@ -184,6 +184,31 @@
               <button class="button primary" id="save-stocktake-counts" type="button">Lưu tiến độ</button>
               <button class="button primary" id="complete-stocktake" type="button" disabled>Hoàn tất đợt</button>
             </div>
+          </div>
+        </section>
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>Lịch sử phiếu nhập / xuất</h2>
+              <div class="caption">
+                Tra cứu các phiếu đã lưu để đối chiếu khi kiểm kê.
+              </div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>LOẠI PHIẾU</th>
+                  <th>SỐ PHIẾU</th>
+                  <th>NGÀY</th>
+                  <th>NHÀ CUNG CẤP / BỘ PHẬN</th>
+                  <th>CHI TIẾT MẶT HÀNG</th>
+                  <th>TRẠNG THÁI</th>
+                </tr>
+              </thead>
+              <tbody id="stocktake-voucher-history"></tbody>
+            </table>
           </div>
         </section>
       </main>

@@ -13,6 +13,7 @@
   };
   const demoCredentials = { username: "admin", password: "kho123" };
 
+  // Đọc dữ liệu JSON đã lưu trong localStorage; báo lỗi và dùng giá trị dự phòng khi cần.
   const read = (key, fallback) => {
     try {
       const value = localStorage.getItem(key);
@@ -24,6 +25,7 @@
     }
   };
 
+  // Chuyển dữ liệu thành JSON và lưu vào localStorage.
   const write = (key, value) => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
@@ -35,6 +37,7 @@
     }
   };
 
+  // Tạo một ô bảng an toàn bằng textContent và thêm vào hàng.
   const cell = (row, value) => {
     const td = document.createElement("td");
     td.textContent = String(value ?? "");
@@ -42,15 +45,19 @@
     return td;
   };
 
+  // Đổi ngày dạng YYYY-MM-DD sang DD/MM/YYYY để hiển thị.
   const formatDate = (date) => {
     if (!date) return "";
     const [year, month, day] = date.split("-");
     return year && month && day ? `${day}/${month}/${year}` : date;
   };
 
+  // Trả về ngày hiện tại theo định dạng YYYY-MM-DD cho trường ngày.
   const todayIso = () => new Date().toISOString().slice(0, 10);
 
+  // Tạo và tải tệp CSV từ tiêu đề cột cùng các hàng dữ liệu.
   const downloadCsv = (fileName, headers, rows) => {
+    // Bọc giá trị trong dấu ngoặc kép và thoát dấu ngoặc kép bên trong.
     const quote = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;
     const csv = [headers, ...rows]
       .map((row) => row.map(quote).join(","))
@@ -65,6 +72,7 @@
     URL.revokeObjectURL(fileUrl);
   };
 
+  // Xử lý đăng nhập mẫu và chuyển người dùng đã đăng nhập đến trang tổng quan.
   const initializeLogin = () => {
     const form = document.querySelector("#login-form");
     if (!form) return false;
@@ -93,6 +101,7 @@
     return true;
   };
 
+  // Kiểm tra phiên đăng nhập; nếu chưa đăng nhập thì chuyển sang trang đăng nhập.
   const guardSession = () => {
     const session = read(KEYS.session, null);
     if (!session?.username) {
@@ -102,6 +111,7 @@
     return session;
   };
 
+  // Hiển thị tên tài khoản và gắn thao tác đăng xuất lên phần đầu trang.
   const setupHeader = (session) => {
     document.querySelectorAll(".top-right").forEach((header) => {
       const userName = [...header.querySelectorAll("span")]
@@ -122,6 +132,7 @@
     });
   };
 
+  // Chuyển các hàng vật tư mẫu trong HTML thành danh sách dữ liệu có kiểu phù hợp.
   const parseInventoryRows = (tbody) =>
     [...tbody.rows].map((row) => {
       const values = [...row.cells].map((item) => item.textContent.trim());
@@ -139,6 +150,7 @@
       };
     });
 
+  // Khởi tạo danh sách tồn kho, thêm vật tư mới và xuất danh mục ra CSV.
   const setupInventory = () => {
     const tbody = document.querySelector("#inventory-list");
     if (!tbody) return;
@@ -147,12 +159,14 @@
       window.alert("Danh mục vật tư lưu trữ không hợp lệ.");
       return;
     }
+    // Xác định nhãn và kiểu hiển thị trạng thái tồn kho của một vật tư.
     const statusFor = (item) =>
       item.quantity <= 0
         ? ["Hết hàng", "empty"]
         : item.quantity < item.minimum
           ? ["Sắp hết", "low"]
           : ["Còn hàng", "good"];
+    // Vẽ lại danh sách vật tư và cập nhật các số liệu tổng quan.
     const render = () => {
       tbody.replaceChildren();
       items.forEach((item) => {
@@ -221,6 +235,7 @@
     });
   };
 
+  // Đồng bộ danh sách vật tư giữa các kho và hiển thị số lượng/trạng thái liên quan.
   const setupWarehouses = () => {
     const warehouseTables = [...document.querySelectorAll("[data-warehouse-code] tbody")];
     if (!warehouseTables.length) return;
@@ -277,10 +292,12 @@
     if (itemCount) itemCount.textContent = String(catalogByCode.size).padStart(2, "0");
   };
 
+  // Khởi tạo danh sách nhà cung cấp, thêm/sửa thông tin và cập nhật lựa chọn phiếu nhập.
   const setupSuppliers = () => {
     const tbody = document.querySelector("#supplier-list");
     const form = document.querySelector("#supplier-form");
     const supplierSelect = document.querySelector("#receipt-supplier");
+    let editingCode = null;
     let suppliers;
     if (tbody) {
       const seeded = [...tbody.rows].map((row) => ({
@@ -289,24 +306,28 @@
         group: row.cells[2].textContent.trim(),
         contact: row.cells[3].textContent.trim(),
         phone: row.cells[4].textContent.trim(),
-        receipts: row.cells[5].textContent.trim(),
-        status: row.cells[6].textContent.trim(),
+        email: row.cells[5].textContent.trim() === "—" ? "" : row.cells[5].textContent.trim(),
+        receipts: row.cells[6].textContent.trim(),
+        status: row.cells[7].textContent.trim(),
       }));
       suppliers = read(KEYS.suppliers, seeded);
       if (!Array.isArray(suppliers)) {
         window.alert("Danh sách nhà cung cấp lưu trữ không hợp lệ.");
         suppliers = seeded;
       }
+      // Vẽ lại bảng nhà cung cấp từ dữ liệu đang lưu.
       const render = () => {
         tbody.replaceChildren();
         suppliers.forEach((supplier) => {
           const row = document.createElement("tr");
+          row.dataset.supplierCode = supplier.code;
           [
             supplier.code,
             supplier.name,
             supplier.group,
             supplier.contact,
             supplier.phone,
+            supplier.email || "—",
             supplier.receipts || "0",
           ].forEach((value) => cell(row, value));
           const status = cell(row, "");
@@ -314,16 +335,80 @@
           badge.className = "status good";
           badge.textContent = supplier.status || "Đang hợp tác";
           status.append(badge);
+          const actions = cell(row, "");
+          const editButton = document.createElement("button");
+          editButton.type = "button";
+          editButton.className = "button";
+          editButton.dataset.action = "edit-supplier";
+          editButton.textContent = "Sửa";
+          actions.append(editButton);
           tbody.append(row);
         });
       };
       render();
+      // Thoát chế độ sửa và đưa biểu mẫu nhà cung cấp về trạng thái thêm mới.
+      const resetForm = () => {
+        editingCode = null;
+        form?.reset();
+        const title = document.querySelector("#supplier-form-title");
+        const saveButton = document.querySelector("#save-supplier");
+        const cancelButton = document.querySelector("#cancel-supplier-edit");
+        if (title) title.textContent = "Thêm nhà cung cấp";
+        if (saveButton) saveButton.textContent = "Lưu nhà cung cấp";
+        if (cancelButton) cancelButton.hidden = true;
+      };
+      tbody.addEventListener("click", (event) => {
+        const button = event.target instanceof Element
+          ? event.target.closest('[data-action="edit-supplier"]')
+          : null;
+        const code = button?.closest("tr")?.dataset.supplierCode;
+        const supplier = suppliers.find((item) => item.code === code);
+        if (!supplier) return;
+        editingCode = supplier.code;
+        form.elements.name.value = supplier.name;
+        form.elements.group.value = supplier.group;
+        form.elements.contact.value = supplier.contact;
+        form.elements.phone.value = supplier.phone;
+        form.elements.email.value = supplier.email || "";
+        document.querySelector("#supplier-form-title").textContent = "Chỉnh sửa nhà cung cấp";
+        document.querySelector("#save-supplier").textContent = "Lưu thay đổi";
+        document.querySelector("#cancel-supplier-edit").hidden = false;
+        form.scrollIntoView({ behavior: "smooth", block: "center" });
+        form.elements.name.focus();
+      });
+      document.querySelector("#cancel-supplier-edit")?.addEventListener("click", resetForm);
       form?.addEventListener("submit", (event) => {
         event.preventDefault();
         const values = new FormData(form);
         const name = String(values.get("name")).trim();
-        if (suppliers.some((supplier) => supplier.name.toLowerCase() === name.toLowerCase())) {
+        if (suppliers.some((supplier) =>
+          supplier.code !== editingCode && supplier.name.toLowerCase() === name.toLowerCase()
+        )) {
           window.alert("Nhà cung cấp này đã có trong danh sách.");
+          return;
+        }
+        const details = {
+          name,
+          group: String(values.get("group")).trim(),
+          contact: String(values.get("contact")).trim(),
+          phone: String(values.get("phone")).trim(),
+          email: String(values.get("email")).trim(),
+        };
+        if (editingCode) {
+          const index = suppliers.findIndex((supplier) => supplier.code === editingCode);
+          if (index < 0) {
+            window.alert("Không tìm thấy nhà cung cấp cần chỉnh sửa.");
+            resetForm();
+            return;
+          }
+          const next = suppliers.map((supplier) =>
+            supplier.code === editingCode ? { ...supplier, ...details } : supplier
+          );
+          if (!write(KEYS.suppliers, next)) return;
+          suppliers = next;
+          render();
+          resetForm();
+          window.alert(`Đã cập nhật thông tin nhà cung cấp ${name}.`);
           return;
         }
         const maxCode = suppliers.reduce((max, supplier) => {
@@ -331,11 +416,7 @@
         }, 0);
         const supplier = {
           code: `NCC-${String(maxCode + 1).padStart(3, "0")}`,
-          name,
-          group: String(values.get("group")).trim(),
-          contact: String(values.get("contact")).trim(),
-          phone: String(values.get("phone")).trim(),
-          email: String(values.get("email")).trim(),
+          ...details,
           receipts: "0",
           status: "Đang hợp tác",
         };
@@ -360,6 +441,7 @@
     }
   };
 
+  // Khởi tạo kiểm kê, quản lý số đếm và hiển thị lịch sử phiếu nhập/xuất.
   const setupStocktakes = () => {
     const tbody = document.querySelector("#stocktake-list");
     const form = document.querySelector("#stocktake-form");
@@ -412,6 +494,7 @@
           difference: row.cells[5].textContent.trim(),
           status: row.cells[6].textContent.trim(),
           items: [],
+          sample: number === "KK-2026-004",
         });
       }
       addBatchAction(row);
@@ -423,6 +506,7 @@
     const detail = document.querySelector("#stocktake-detail");
     const itemBody = document.querySelector("#stocktake-items");
     const completeButton = document.querySelector("#complete-stocktake");
+    // Hiển thị vật tư của đợt kiểm kê, số lượng sổ, số đếm và chênh lệch.
     const renderItems = (batch) => {
       itemBody.replaceChildren();
       const isReadOnly = batch.status === "Hoàn tất";
@@ -439,6 +523,7 @@
         input.className = "field stocktake-count-input";
         input.dataset.itemCode = item.code;
         input.value = item.counted === null ? "" : String(item.counted);
+        input.placeholder = "Nhập số lượng";
         input.disabled = isReadOnly;
         input.setAttribute("aria-label", `Số lượng thực đếm ${item.name}`);
         countCell.append(input);
@@ -454,7 +539,9 @@
       document.querySelector("#stocktake-detail-heading").textContent =
         `Kiểm kê ${batch.number} · ${batch.area}`;
       const hasSavedCounts = (batch.items || []).some((item) => item.counted !== null);
-      document.querySelector("#stocktake-detail-note").textContent = isReadOnly
+      document.querySelector("#stocktake-detail-note").textContent = batch.sample
+        ? "Dữ liệu đếm bên dưới chỉ để minh họa; hãy thay bằng số lượng thực tế trước khi lưu."
+        : isReadOnly
         ? hasSavedCounts
           ? "Đợt đã hoàn tất; thông tin kiểm đếm được mở ở chế độ chỉ xem."
           : "Đợt mẫu này được tạo trước khi lưu số đếm chi tiết; danh sách vật tư chỉ để tham khảo."
@@ -462,6 +549,7 @@
       document.querySelector("#stocktake-detail-actions").hidden = isReadOnly;
       completeButton.disabled = !batch.items.length || batch.items.some((item) => item.counted === null);
     };
+    // Lưu số lượng đã đếm và cập nhật tiến độ; có thể đánh dấu đợt hoàn tất.
     const saveCounts = (complete = false) => {
       if (!activeBatch) return;
       const updatedItems = activeBatch.items.map((item) => {
@@ -490,6 +578,7 @@
       const updated = {
         ...activeBatch,
         items: updatedItems,
+        sample: false,
         progress: `${counted} / ${updatedItems.length} mã`,
         difference: counted === 0 ? "—" : differenceCount === 0 ? "Không" : `${String(differenceCount).padStart(2, "0")} mã`,
         status: complete ? "Hoàn tất" : activeBatch.status,
@@ -516,16 +605,46 @@
       if (!complete) window.alert(`Đã lưu tiến độ kiểm kê ${updated.number}.`);
       else window.alert(`Đợt kiểm kê ${updated.number} đã hoàn tất.`);
     };
+    // Mở chi tiết một đợt kiểm kê; bổ sung danh sách vật tư cho đợt mẫu cũ.
     const openBatch = (batch) => {
+      const demoCounts = {
+        "KK-2026-004": {
+          "VT-00124": 150,
+          "VT-00087": 16,
+          "VT-00056": 12,
+          "VT-00102": 60,
+          "VT-00031": 10,
+        },
+        "KK-2026-003": {
+          "VT-00124": 147,
+        },
+        "KK-2026-002": {},
+      };
+      const sampleCounts = demoCounts[batch.number];
       if (!Array.isArray(batch.items) || !batch.items.length) {
         batch = {
           ...batch,
+          sample: Boolean(sampleCounts),
           items: inventory.map((item) => ({
             code: item.code,
             name: item.name,
             unit: item.unit,
             expected: Number(item.quantity) || 0,
-            counted: null,
+            counted: sampleCounts
+              ? sampleCounts[item.code] ?? (Number(item.quantity) || 0)
+              : null,
+          })),
+        };
+      } else if (
+        sampleCounts &&
+        batch.items.every((item) => item.counted === null)
+      ) {
+        batch = {
+          ...batch,
+          sample: true,
+          items: batch.items.map((item) => ({
+            ...item,
+            counted: sampleCounts[item.code] ?? item.expected,
           })),
         };
       }
@@ -533,6 +652,12 @@
       renderItems(batch);
       detail.hidden = false;
       detail.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (batch.status !== "Hoàn tất") {
+        const firstUncounted = [...itemBody.querySelectorAll(".stocktake-count-input")].find(
+          (input) => input.value === "",
+        );
+        firstUncounted?.focus();
+      }
     };
     tbody.addEventListener("click", (event) => {
       const button = event.target instanceof Element ? event.target.closest("[data-action='count']") : null;
@@ -543,9 +668,19 @@
     });
     itemBody.addEventListener("input", () => {
       if (activeBatch) {
-        completeButton.disabled = [...itemBody.querySelectorAll(".stocktake-count-input")].some(
-          (input) => input.value.trim() === "",
-        );
+        const inputs = [...itemBody.querySelectorAll(".stocktake-count-input")];
+        inputs.forEach((input) => {
+          const item = activeBatch.items.find((entry) => entry.code === input.dataset.itemCode);
+          const diffCell = input.closest("tr").cells[4];
+          const value = input.value.trim();
+          if (!item || value === "") {
+            diffCell.textContent = "Chưa đếm";
+            return;
+          }
+          const difference = Number(value) - item.expected;
+          diffCell.textContent = `${difference > 0 ? "+" : ""}${difference} ${item.unit}`;
+        });
+        completeButton.disabled = inputs.some((input) => input.value.trim() === "");
       }
     });
     document.querySelector("#save-stocktake-counts").addEventListener("click", () => saveCounts());
@@ -597,6 +732,7 @@
       panel.hidden = true;
       window.alert(`Đã tạo đợt kiểm kê ${batch.number}.`);
     });
+    // Thêm hàng đợt kiểm kê vào bảng và đăng ký bản ghi để mở xem.
     function renderBatch(batch) {
       const row = document.createElement("tr");
       [
@@ -622,6 +758,7 @@
       tbody.append(row);
       records.set(batch.number, batch);
     }
+    // Bổ sung nút mở/kiểm kê cho các đợt mẫu đã có trong HTML.
     function addBatchAction(row) {
       if (row.cells.length >= 8) return;
       const action = cell(row, "");
@@ -632,8 +769,158 @@
       actionButton.textContent = row.cells[6].textContent.trim() === "Hoàn tất" ? "Xem" : "Kiểm kê";
       action.append(actionButton);
     }
+    const voucherHistory = document.querySelector("#stocktake-voucher-history");
+    if (voucherHistory) {
+      const savedReceipts = read(KEYS.createdReceipts, []);
+      const deletedReceipts = read(KEYS.deletedReceipts, []);
+      const approvedReceipts = read(KEYS.approvedReceipts, {});
+      const savedOutbound = read(KEYS.createdOutbound, []);
+      const deletedOutbound = read(KEYS.deletedOutbound, []);
+      const approvedOutbound = read(KEYS.approvedOutbound, {});
+      if (
+        !Array.isArray(savedReceipts) ||
+        !Array.isArray(deletedReceipts) ||
+        !Array.isArray(savedOutbound) ||
+        !Array.isArray(deletedOutbound) ||
+        !approvedReceipts ||
+        typeof approvedReceipts !== "object" ||
+        Array.isArray(approvedReceipts) ||
+        !approvedOutbound ||
+        typeof approvedOutbound !== "object" ||
+        Array.isArray(approvedOutbound)
+      ) {
+        window.alert("Lịch sử phiếu nhập/xuất lưu trữ không hợp lệ.");
+      }
+      const receiptRecords = new Map([
+        ["PN-2026-0084", {
+          number: "PN-2026-0084",
+          date: "29/09/2026",
+          party: "Thiết bị điện Minh Phát",
+          itemCount: "06",
+          items: ["Dây điện Cadivi 2.5mm — 4 cuộn", "CB tép 2P 20A LS — 2 cái"],
+          status: "Chờ xác nhận",
+          sample: true,
+        }],
+        ["PN-2026-0083", {
+          number: "PN-2026-0083",
+          date: "28/09/2026",
+          party: "Cơ khí Thành Công",
+          itemCount: "12",
+          items: ["Bu lông lục giác M10 x 50 — 200 cái", "Mũi khoan thép HSS 8mm — 12 cái"],
+          status: "Hoàn tất",
+          sample: true,
+        }],
+        ["PN-2026-0082", {
+          number: "PN-2026-0082",
+          date: "26/09/2026",
+          party: "Bảo hộ An Toàn",
+          itemCount: "04",
+          items: ["Găng tay bảo hộ phủ PU — 30 đôi", "Mũ bảo hộ lao động — 10 cái"],
+          status: "Hoàn tất",
+          sample: true,
+        }],
+      ]);
+      (Array.isArray(savedReceipts) ? savedReceipts : []).forEach((record) => {
+        if (!Array.isArray(deletedReceipts) || !deletedReceipts.includes(record.number)) {
+          receiptRecords.set(record.number, {
+            ...record,
+            party: record.supplier,
+            status: approvedReceipts?.[record.number] ? "Hoàn tất" : record.status || "Chờ xác nhận",
+          });
+        }
+      });
+      if (Array.isArray(deletedReceipts)) {
+        deletedReceipts.forEach((number) => receiptRecords.delete(number));
+      }
+      const outboundRecords = new Map([
+        ["PX-2026-0117", {
+          number: "PX-2026-0117",
+          date: "29/09/2026",
+          party: "Sản xuất",
+          itemCount: "05",
+          items: ["Dây điện Cadivi 2.5mm — 3 cuộn", "Băng keo cách điện Nano — 8 cuộn"],
+          status: "Chờ duyệt",
+          sample: true,
+        }],
+        ["PX-2026-0116", {
+          number: "PX-2026-0116",
+          date: "29/09/2026",
+          party: "Bảo trì",
+          itemCount: "03",
+          items: ["Găng tay bảo hộ phủ PU — 5 đôi", "Mũi khoan thép HSS 8mm — 2 cái"],
+          status: "Đã xuất",
+          sample: true,
+        }],
+        ["PX-2026-0115", {
+          number: "PX-2026-0115",
+          date: "28/09/2026",
+          party: "Sản xuất",
+          itemCount: "08",
+          items: ["Bu lông lục giác M10 x 50 — 40 cái", "CB tép 2P 20A LS — 2 cái"],
+          status: "Đã xuất",
+          sample: true,
+        }],
+      ]);
+      (Array.isArray(savedOutbound) ? savedOutbound : []).forEach((record) => {
+        if (!Array.isArray(deletedOutbound) || !deletedOutbound.includes(record.number)) {
+          outboundRecords.set(record.number, {
+            ...record,
+            party: record.department,
+            status: approvedOutbound?.[record.number] ? "Đã duyệt" : record.status || "Chờ duyệt",
+          });
+        }
+      });
+      if (Array.isArray(deletedOutbound)) {
+        deletedOutbound.forEach((number) => outboundRecords.delete(number));
+      }
+      // Thêm một phiếu nhập/xuất cùng chi tiết vật tư vào bảng lịch sử kiểm kê.
+      const renderVoucher = (type, record) => {
+        const row = document.createElement("tr");
+        cell(row, type);
+        cell(row, record.number);
+        cell(row, record.date);
+        cell(row, record.party || "—");
+        const itemsCell = cell(row, "");
+        const itemLabel = document.createElement("div");
+        itemLabel.className = "voucher-item-count";
+        itemLabel.textContent = `${record.itemCount || "0"} mặt hàng`;
+        itemsCell.append(itemLabel);
+        if (record.sample) {
+          const sampleNote = document.createElement("div");
+          sampleNote.className = "document-items-note";
+          sampleNote.textContent = "Chi tiết minh họa";
+          itemsCell.append(sampleNote);
+        }
+        if (Array.isArray(record.items) && record.items.length > 0) {
+          const list = document.createElement("ul");
+          list.className = "voucher-items-list";
+          record.items.forEach((item) => {
+            const entry = document.createElement("li");
+            entry.textContent = item;
+            list.append(entry);
+          });
+          itemsCell.append(list);
+        } else {
+          const missing = document.createElement("span");
+          missing.className = "form-note";
+          missing.textContent = "Chưa lưu chi tiết mặt hàng";
+          itemsCell.append(missing);
+        }
+        const statusCell = cell(row, "");
+        const badge = document.createElement("span");
+        badge.className = ["Hoàn tất", "Đã xuất", "Đã duyệt"].includes(record.status)
+          ? "status good"
+          : "status low";
+        badge.textContent = record.status || "—";
+        statusCell.append(badge);
+        voucherHistory.append(row);
+      };
+      [...outboundRecords.values()].reverse().forEach((record) => renderVoucher("Phiếu xuất", record));
+      [...receiptRecords.values()].reverse().forEach((record) => renderVoucher("Phiếu nhập", record));
+    }
   };
 
+  // Quản lý tạo, duyệt, xem chi tiết và xóa phiếu nhập kho.
   const setupReceiptHistory = (session) => {
     const form = document.querySelector("#receipt-form");
     const tbody = document.querySelector("#receipt-history");
@@ -654,9 +941,65 @@
       return;
     }
     const deleted = new Set(deletedValues);
+    const recordsByNumber = new Map(created.map((record) => [record.number, record]));
+    [
+      ["PN-2026-0084", ["Dây điện Cadivi 2.5mm — 4 cuộn", "CB tép 2P 20A LS — 2 cái"]],
+      ["PN-2026-0083", ["Bu lông lục giác M10 x 50 — 200 cái", "Mũi khoan thép HSS 8mm — 12 cái"]],
+      ["PN-2026-0082", ["Găng tay bảo hộ phủ PU — 30 đôi", "Mũ bảo hộ lao động — 10 cái"]],
+    ].forEach(([number, items]) => {
+      if (!recordsByNumber.has(number)) {
+        recordsByNumber.set(number, { items, sample: true });
+      }
+    });
     [...tbody.rows].forEach((row) => {
       if (deleted.has(row.dataset.documentId)) row.remove();
     });
+    // Thêm nút mở/ẩn danh sách vật tư cho một phiếu nhập.
+    const addItemsButton = (row) => {
+      const actions = row.cells[8];
+      if (!actions || actions.querySelector('[data-action="view-items"]')) return;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "button";
+      button.dataset.action = "view-items";
+      button.textContent = "Xem hàng";
+      const wrap = actions.querySelector(".row-actions") || actions;
+      wrap.prepend(button);
+    };
+    // Mở hoặc thu gọn danh sách mặt hàng đã lưu của phiếu nhập.
+    const toggleItems = (row, number) => {
+      const existing = row.nextElementSibling;
+      if (existing?.classList.contains("document-items-detail")) {
+        existing.remove();
+        row.querySelector('[data-action="view-items"]').textContent = "Xem hàng";
+        return;
+      }
+      const detailRow = document.createElement("tr");
+      detailRow.className = "document-items-detail";
+      const detailCell = cell(detailRow, "");
+      detailCell.colSpan = 9;
+      const record = recordsByNumber.get(number);
+      if (record?.sample) {
+        const note = document.createElement("p");
+        note.className = "document-items-note";
+        note.textContent = "Chi tiết minh họa · Dữ liệu mẫu";
+        detailCell.append(note);
+      }
+      if (Array.isArray(record?.items) && record.items.length > 0) {
+        const list = document.createElement("ol");
+        record.items.forEach((item) => {
+          const entry = document.createElement("li");
+          entry.textContent = item;
+          list.append(entry);
+        });
+        detailCell.append(list);
+      } else {
+        detailCell.textContent = "Phiếu này chưa có chi tiết mặt hàng được lưu.";
+      }
+      row.after(detailRow);
+      row.querySelector('[data-action="view-items"]').textContent = "Ẩn hàng";
+    };
+    // Lưu người duyệt và cập nhật trạng thái phiếu nhập thành hoàn tất.
     const approveRecord = (row, approver) => {
       const number = row.dataset.documentId;
       if (!number || row.cells[7]?.textContent.trim() !== "Chờ xác nhận") return;
@@ -669,6 +1012,7 @@
       badge.textContent = "Hoàn tất";
       row.querySelector('[data-action="approve"]')?.remove();
     };
+    // Thêm nút duyệt cho các phiếu nhập đang chờ xác nhận.
     const addApproveButton = (row) => {
       if (!row.cells[7] || row.cells[7].textContent.trim() !== "Chờ xác nhận") return;
       const actions = row.cells[8];
@@ -695,6 +1039,7 @@
       }
       addApproveButton(row);
     });
+    // Tạo hàng lịch sử từ dữ liệu phiếu nhập và gắn các nút thao tác.
     const render = (record) => {
       const row = document.createElement("tr");
       row.dataset.documentId = record.number;
@@ -724,12 +1069,18 @@
       deleteButton.textContent = "Xóa";
       actions.append(deleteButton);
       tbody.append(row);
+      addItemsButton(row);
       addApproveButton(row);
     };
+    [...tbody.rows].forEach(addItemsButton);
     created.forEach((record) => {
-      if (!deleted.has(record.number)) render(record);
+      if (!deleted.has(record.number)) {
+        render(record);
+        recordsByNumber.set(record.number, record);
+      }
     });
     const numberInput = document.querySelector("#receipt-number");
+    // Tính số phiếu nhập kế tiếp dựa trên số lớn nhất đang có.
     const nextNumber = () => {
       const numbers = [...tbody.rows].map((row) => row.dataset.documentId);
       const highest = [...numbers, ...deleted].reduce((max, value) => {
@@ -750,12 +1101,14 @@
         date: formatDate(String(values.get("date"))),
         supplier: String(values.get("supplier")),
         itemCount: String(lines.length).padStart(2, "0"),
+        items: lines.map((line) => line.trim()),
         value: `${new Intl.NumberFormat("vi-VN").format(Number(values.get("value")))} đ`,
         creator: session.name || session.username,
         status: "Chờ xác nhận",
       };
       if (!write(createdKey, [...created, record])) return;
       created.push(record);
+      recordsByNumber.set(record.number, record);
       render(record);
       form.reset();
       dateInput.value = todayIso();
@@ -767,6 +1120,10 @@
       const row = button?.closest("tr");
       const number = row?.dataset.documentId;
       if (!button || !row || !number) return;
+      if (button.dataset.action === "view-items") {
+        toggleItems(row, number);
+        return;
+      }
       if (button.dataset.action === "approve") {
         approveRecord(row, session.name || session.username);
         return;
@@ -774,6 +1131,9 @@
       if (button.dataset.action !== "delete" || !window.confirm(`Xóa phiếu nhập ${number}?`)) return;
       if (!write(deletedKey, [...deleted, number])) return;
       deleted.add(number);
+      if (row.nextElementSibling?.classList.contains("document-items-detail")) {
+        row.nextElementSibling.remove();
+      }
       row.remove();
     });
     document.querySelector("#export-receipt-history")?.addEventListener("click", () => {
@@ -785,6 +1145,7 @@
     });
   };
 
+  // Quản lý tạo, duyệt, xem chi tiết, xuất CSV và xóa phiếu xuất kho.
   const setupOutboundHistory = (session) => {
     const form = document.querySelector("#outbound-form");
     const tbody = document.querySelector("#outbound-history");
@@ -803,6 +1164,16 @@
       return;
     }
     const deleted = new Set(deletedValues);
+    const recordsByNumber = new Map(created.map((record) => [record.number, record]));
+    [
+      ["PX-2026-0117", ["Dây điện Cadivi 2.5mm — 3 cuộn", "Băng keo cách điện Nano — 8 cuộn"]],
+      ["PX-2026-0116", ["Găng tay bảo hộ phủ PU — 5 đôi", "Mũi khoan thép HSS 8mm — 2 cái"]],
+      ["PX-2026-0115", ["Bu lông lục giác M10 x 50 — 40 cái", "CB tép 2P 20A LS — 2 cái"]],
+    ].forEach(([number, items]) => {
+      if (!recordsByNumber.has(number)) {
+        recordsByNumber.set(number, { items, sample: true });
+      }
+    });
     [...tbody.rows].forEach((row) => {
       if (deleted.has(row.dataset.documentId)) row.remove();
     });
@@ -815,6 +1186,52 @@
       "Người duyệt",
       "Trạng thái",
     ];
+    // Thêm nút mở/ẩn danh sách vật tư cho một phiếu xuất.
+    const addItemsButton = (row) => {
+      const actions = row.cells[7];
+      if (!actions || actions.querySelector('[data-action="view-items"]')) return;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "button";
+      button.dataset.action = "view-items";
+      button.textContent = "Xem hàng";
+      const wrap = actions.querySelector(".row-actions") || actions;
+      wrap.prepend(button);
+    };
+    // Mở hoặc thu gọn danh sách mặt hàng đã lưu của phiếu xuất.
+    const toggleItems = (row, number) => {
+      const existing = row.nextElementSibling;
+      if (existing?.classList.contains("document-items-detail")) {
+        existing.remove();
+        row.querySelector('[data-action="view-items"]').textContent = "Xem hàng";
+        return;
+      }
+      const detailRow = document.createElement("tr");
+      detailRow.className = "document-items-detail";
+      const detailCell = cell(detailRow, "");
+      detailCell.colSpan = 8;
+      const record = recordsByNumber.get(number);
+      if (record?.sample) {
+        const note = document.createElement("p");
+        note.className = "document-items-note";
+        note.textContent = "Chi tiết minh họa · Dữ liệu mẫu";
+        detailCell.append(note);
+      }
+      if (Array.isArray(record?.items) && record.items.length > 0) {
+        const list = document.createElement("ol");
+        record.items.forEach((item) => {
+          const entry = document.createElement("li");
+          entry.textContent = item;
+          list.append(entry);
+        });
+        detailCell.append(list);
+      } else {
+        detailCell.textContent = "Phiếu này chưa có chi tiết mặt hàng được lưu.";
+      }
+      row.after(detailRow);
+      row.querySelector('[data-action="view-items"]').textContent = "Ẩn hàng";
+    };
+    // Lưu người duyệt và cập nhật trạng thái phiếu xuất.
     const approveRecord = (row, approver) => {
       const number = row.dataset.documentId;
       if (!number || row.cells[6]?.textContent.trim() !== "Chờ duyệt") return;
@@ -827,6 +1244,7 @@
       badge.textContent = "Đã duyệt";
       row.querySelector('[data-action="approve"]')?.remove();
     };
+    // Thêm nút duyệt cho các phiếu xuất đang chờ duyệt.
     const addApproveButton = (row) => {
       const actions = row.cells[7];
       if (!actions || row.cells[6]?.textContent.trim() !== "Chờ duyệt") return;
@@ -851,6 +1269,7 @@
       }
       addApproveButton(row);
     });
+    // Tạo hàng lịch sử từ dữ liệu phiếu xuất và gắn các nút thao tác.
     const render = (record) => {
       const row = document.createElement("tr");
       row.dataset.documentId = record.number;
@@ -883,12 +1302,18 @@
       );
       actions.append(wrap);
       tbody.append(row);
+      addItemsButton(row);
       addApproveButton(row);
     };
+    [...tbody.rows].forEach(addItemsButton);
     created.forEach((record) => {
-      if (!deleted.has(record.number)) render(record);
+      if (!deleted.has(record.number)) {
+        render(record);
+        recordsByNumber.set(record.number, record);
+      }
     });
     const numberInput = document.querySelector("#issue-number");
+    // Tính số phiếu xuất kế tiếp dựa trên số lớn nhất đang có.
     const nextNumber = () => {
       const numbers = [...tbody.rows].map((row) => row.dataset.documentId);
       const highest = [...numbers, ...deleted].reduce((max, value) => {
@@ -908,12 +1333,14 @@
         date: formatDate(String(values.get("date"))),
         department: String(values.get("department")),
         itemCount: String(lines.length).padStart(2, "0"),
+        items: lines.map((line) => line.trim()),
         requester: String(values.get("requester")).trim(),
         approver: String(values.get("approver")) || session.name || session.username,
         status: "Chờ duyệt",
       };
       if (!write(KEYS.createdOutbound, [...created, record])) return;
       created.push(record);
+      recordsByNumber.set(record.number, record);
       render(record);
       form.reset();
       dateInput.value = todayIso();
@@ -926,6 +1353,10 @@
       const number = row?.dataset.documentId;
       if (!button || !row || !number) return;
       const rowData = [...row.cells].slice(0, headers.length).map((td) => td.textContent.trim());
+      if (button.dataset.action === "view-items") {
+        toggleItems(row, number);
+        return;
+      }
       if (button.dataset.action === "approve") {
         approveRecord(row, session.name || session.username);
         return;
@@ -937,6 +1368,9 @@
       if (!window.confirm(`Bạn có chắc muốn xóa phiếu ${number}?`)) return;
       if (!write(KEYS.deletedOutbound, [...deleted, number])) return;
       deleted.add(number);
+      if (row.nextElementSibling?.classList.contains("document-items-detail")) {
+        row.nextElementSibling.remove();
+      }
       row.remove();
     });
     document.querySelector("#export-history")?.addEventListener("click", () => {
@@ -948,10 +1382,23 @@
     });
   };
 
+  // Chạy các phần khởi tạo phù hợp sau khi HTML tải xong.
   document.addEventListener("DOMContentLoaded", () => {
     if (initializeLogin()) return;
     const session = guardSession();
     if (!session) return;
+    // Đồng bộ tên kho trên phiếu trước khi mở hộp thoại in chứng từ.
+    document.querySelectorAll('[data-action="print-document"]').forEach((button) => {
+      button.addEventListener("click", () => {
+        const panel = button.closest(".transaction-form");
+        const warehouse = panel?.querySelector('select[name="warehouse"]');
+        const warehouseLabel = panel?.querySelector(".document-warehouse");
+        if (warehouse && warehouseLabel) {
+          warehouseLabel.textContent = warehouse.selectedOptions[0]?.textContent || "";
+        }
+        window.print();
+      });
+    });
     setupHeader(session);
     const today = document.querySelector("#today");
     if (today) today.textContent = new Intl.DateTimeFormat("vi-VN", { dateStyle: "full" }).format(new Date());

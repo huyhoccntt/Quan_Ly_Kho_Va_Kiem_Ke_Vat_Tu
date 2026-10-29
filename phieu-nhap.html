@@ -69,10 +69,25 @@
         </section>
         <section class="panel transaction-form">
           <div class="panel-title">
-            <h2>Tạo phiếu nhập</h2>
-            <p class="form-note">Phiếu được lưu trên trình duyệt này.</p>
+            <div>
+              <h2>Tạo phiếu nhập</h2>
+              <p class="form-note">Chứng từ nhập hàng vào kho.</p>
+            </div>
+            <button class="button" type="button" data-action="print-document">
+              In phiếu
+            </button>
           </div>
           <form class="form" id="receipt-form">
+            <div class="document-heading form-field-wide">
+              <div>
+                <div class="document-organization">QUẢN LÝ KHO VẬT TƯ</div>
+                <div class="document-warehouse">Kho trung tâm · Hà Nội</div>
+              </div>
+              <div class="document-title">
+                <h3>PHIẾU NHẬP KHO</h3>
+                <span>Chứng từ lưu hành nội bộ</span>
+              </div>
+            </div>
             <div class="form-field">
               <label for="receipt-number">Số phiếu</label>
               <input
@@ -122,12 +137,12 @@
               />
             </div>
             <div class="form-field form-field-wide">
-              <label for="receipt-items">Vật tư và số lượng nhận</label>
+              <label for="receipt-items">Danh sách vật tư nhập kho</label>
               <textarea
                 id="receipt-items"
                 name="items"
                 rows="3"
-                placeholder="Chọn vật tư · nhập số lượng · đơn vị"
+                placeholder="Mỗi dòng ghi: tên vật tư — số lượng — đơn vị tính"
                 required
               ></textarea>
             </div>
@@ -141,8 +156,8 @@
             </div>
           </form>
           <div class="form-actions">
-            <span class="form-note">Dữ liệu lưu cục bộ trên trình duyệt.</span
-            ><button class="button primary" type="submit" form="receipt-form">
+            <span class="form-note">Dữ liệu phiếu được lưu trên trình duyệt này.</span>
+            <button class="button primary" type="submit" form="receipt-form">
               Lưu phiếu nhập
             </button>
           </div>
@@ -183,6 +198,7 @@
                   <td>
                     <div class="row-actions">
                       <button class="button primary" type="button" data-action="approve">Duyệt</button>
+                      <button class="button" type="button" data-action="view-items">Xem hàng</button>
                       <button class="button button-danger" type="button" data-action="delete">Xóa</button>
                     </div>
                   </td>
@@ -197,6 +213,13 @@
                   <td>Trần Manh Huy</td>
                   <td><span class="status good">Hoàn tất</span></td>
                   <td>
+                    <button
+                      class="button"
+                      type="button"
+                      data-action="view-items"
+                    >
+                      Xem hàng
+                    </button>
                     <button
                       class="button button-danger"
                       type="button"
@@ -216,6 +239,13 @@
                   <td>Trần Manh Huy</td>
                   <td><span class="status good">Hoàn tất</span></td>
                   <td>
+                    <button
+                      class="button"
+                      type="button"
+                      data-action="view-items"
+                    >
+                      Xem hàng
+                    </button>
                     <button
                       class="button button-danger"
                       type="button"
