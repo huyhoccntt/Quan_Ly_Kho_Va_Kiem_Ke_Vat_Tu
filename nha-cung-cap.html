@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
   </head>
   <body>
     <header class="topbar">
@@ -43,6 +44,9 @@
               Thông tin liên hệ và lịch sử giao dịch với đối tác.
             </p>
           </div>
+          <div class="actions">
+            <a class="button primary" href="#add-supplier">+ Thêm nhà cung cấp</a>
+          </div>
         </section>
         <section class="metrics">
           <div class="metric">
@@ -66,6 +70,45 @@
             <div class="metric-note">Hóa đơn chưa hoàn tất</div>
           </div>
         </section>
+        <section class="panel transaction-form" id="add-supplier">
+          <div class="panel-title">
+            <h2 id="supplier-form-title">Thêm nhà cung cấp</h2>
+            <p class="form-note">Thông tin được lưu trên trình duyệt này.</p>
+          </div>
+          <form class="form" id="supplier-form">
+            <div class="form-field">
+              <label for="supplier-name">Tên nhà cung cấp</label>
+              <input id="supplier-name" name="name" required />
+            </div>
+            <div class="form-field">
+              <label for="supplier-group">Nhóm hàng</label>
+              <input id="supplier-group" name="group" required />
+            </div>
+            <div class="form-field">
+              <label for="supplier-contact">Người liên hệ</label>
+              <input id="supplier-contact" name="contact" required />
+            </div>
+            <div class="form-field">
+              <label for="supplier-phone">Điện thoại</label>
+              <input id="supplier-phone" name="phone" type="tel" required />
+            </div>
+            <div class="form-field form-field-wide">
+              <label for="supplier-email">Email (không bắt buộc)</label>
+              <input id="supplier-email" name="email" type="email" />
+            </div>
+            <div class="form-field form-field-wide form-actions">
+              <span class="form-note">Mã nhà cung cấp sẽ được tạo tự động.</span>
+              <div class="row-actions">
+                <button class="button" type="button" id="cancel-supplier-edit" hidden>
+                  Hủy sửa
+                </button>
+                <button class="button primary" type="submit" id="save-supplier">
+                  Lưu nhà cung cấp
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
         <section>
           <div class="section-head">
             <div>
@@ -84,19 +127,23 @@
                   <th>NHÓM HÀNG</th>
                   <th>NGƯỜI LIÊN HỆ</th>
                   <th>ĐIỆN THOẠI</th>
+                  <th>EMAIL</th>
                   <th>PHIẾU NHẬP</th>
                   <th>TRẠNG THÁI</th>
+                  <th>THAO TÁC</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="supplier-list">
                 <tr>
                   <td>NCC-001</td>
                   <td>Thiết bị điện Minh Phát</td>
                   <td>Điện công nghiệp</td>
                   <td>Nguyễn Văn Hùng</td>
                   <td>024 3822 1040</td>
+                  <td>—</td>
                   <td>18</td>
                   <td><span class="status good">Đang hợp tác</span></td>
+                  <td></td>
                 </tr>
                 <tr>
                   <td>NCC-002</td>
@@ -104,8 +151,10 @@
                   <td>Cơ khí</td>
                   <td>Trần Quốc Việt</td>
                   <td>024 3765 8821</td>
+                  <td>—</td>
                   <td>12</td>
                   <td><span class="status good">Đang hợp tác</span></td>
+                  <td></td>
                 </tr>
                 <tr>
                   <td>NCC-003</td>
@@ -113,8 +162,10 @@
                   <td>Bảo hộ lao động</td>
                   <td>Lê Thị Hương</td>
                   <td>024 3991 2250</td>
+                  <td>—</td>
                   <td>09</td>
                   <td><span class="status good">Đang hợp tác</span></td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>

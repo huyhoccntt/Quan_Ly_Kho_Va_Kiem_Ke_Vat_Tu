@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Đăng nhập · Quản lý kho vật tư</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+  <body class="login-page">
+    <main class="login-card">
+      <div class="eyebrow">Quản trị kho</div>
+      <h1>Đăng nhập hệ thống</h1>
+      <p class="subtitle">Đăng nhập để quản lý vật tư và giao dịch kho.</p>
+      <form class="form login-form" id="login-form">
+        <div class="form-field form-field-wide">
+          <label for="login-username">Tên đăng nhập</label>
+          <input id="login-username" name="username" autocomplete="username" required />
+        </div>
+        <div class="form-field form-field-wide">
+          <label for="login-password">Mật khẩu</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required />
+        </div>
+        <p class="login-error" id="login-error" role="alert" hidden></p>
+        <div class="form-field form-field-wide">
+          <button class="button primary" type="submit">Đăng nhập</button>
+        </div>
+      </form>
+      <p class="login-note">Tài khoản demo: <strong>admin</strong> · Mật khẩu: <strong>kho123</strong></p>
+      <p class="login-note">Đây là đăng nhập mẫu lưu cục bộ, không thay thế xác thực bảo mật trên máy chủ.</p>
+    </main>
+  </body>
+</html>

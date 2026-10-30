@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
   </head>
   <body>
     <header class="topbar">
@@ -35,14 +36,48 @@
         </nav>
       </aside>
       <main>
-        <section class="banner">
-          <div>
+        <section class="banner stocktake-banner">
+          <div class="stocktake-banner-copy">
             <div class="eyebrow">Đối soát tồn kho</div>
             <h1>Kiểm kê</h1>
             <p class="subtitle">
-              Đối chiếu số lượng thực tế với số liệu trên hệ thống.
+              Thực hiện kiểm kê theo khu vực và đối chiếu chênh lệch.
             </p>
           </div>
+          <div class="actions stocktake-banner-actions">
+            <a class="button" href="phieu-xuat.html">Phiếu xuất</a>
+            <a class="button" href="vat-tu.html">Danh mục vật tư</a>
+            <button class="button" id="export-stocktakes" type="button">
+              Tải lịch sử CSV
+            </button>
+            <button class="button primary" id="show-stocktake-form" type="button">
+              Tạo đợt kiểm kê
+            </button>
+          </div>
+        </section>
+        <section class="panel transaction-form" id="stocktake-form-panel" hidden>
+          <div class="panel-title">
+            <h2>Tạo đợt kiểm kê</h2>
+            <p class="form-note">Đợt kiểm kê mới được lưu trên trình duyệt này.</p>
+          </div>
+          <form class="form" id="stocktake-form">
+            <div class="form-field">
+              <label for="stocktake-area">Khu vực kiểm kê</label>
+              <input id="stocktake-area" name="area" placeholder="Ví dụ: Khu A · Điện công nghiệp" required />
+            </div>
+            <div class="form-field">
+              <label for="stocktake-manager">Người phụ trách</label>
+              <input id="stocktake-manager" name="manager" value="Trần Manh Huy" required />
+            </div>
+            <div class="form-field">
+              <label for="stocktake-date">Ngày tạo</label>
+              <input id="stocktake-date" name="date" type="date" required />
+            </div>
+            <div class="form-field form-field-wide form-actions">
+              <span class="form-note">Số mã vật tư sẽ được tổng hợp từ danh mục hiện tại.</span>
+              <button class="button primary" type="submit">Lưu đợt kiểm kê</button>
+            </div>
+          </form>
         </section>
         <section class="metrics">
           <div class="metric">
@@ -86,16 +121,17 @@
                   <th>TIẾN ĐỘ</th>
                   <th>CHÊNH LỆCH</th>
                   <th>TRẠNG THÁI</th>
+                  <th>THAO TÁC</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="stocktake-list">
                 <tr>
                   <td>KK-2026-004</td>
                   <td>Khu B · Bảo hộ lao động</td>
                   <td>29/09/2026</td>
                   <td>Trần Quốc Bảo</td>
-                  <td>18 / 32 mã</td>
-                  <td>—</td>
+                  <td>5 / 6 mã</td>
+                  <td>04 mã</td>
                   <td><span class="status low">Đang thực hiện</span></td>
                 </tr>
                 <tr>
@@ -117,6 +153,61 @@
                   <td><span class="status good">Hoàn tất</span></td>
                 </tr>
               </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="panel stocktake-detail" id="stocktake-detail" hidden>
+          <div class="panel-title stocktake-detail-title">
+            <div>
+              <h2 id="stocktake-detail-heading">Chi tiết kiểm kê</h2>
+              <p class="form-note" id="stocktake-detail-note"></p>
+            </div>
+            <button class="button" id="close-stocktake-detail" type="button">Đóng</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>MÃ VẬT TƯ</th>
+                  <th>TÊN VẬT TƯ</th>
+                  <th>TỒN TRÊN SỔ</th>
+                  <th>SỐ LƯỢNG THỰC ĐẾM</th>
+                  <th>CHÊNH LỆCH</th>
+                </tr>
+              </thead>
+              <tbody id="stocktake-items"></tbody>
+            </table>
+          </div>
+          <div class="stocktake-detail-actions" id="stocktake-detail-actions">
+            <span class="form-note">Nhập số lượng thực đếm; số 0 được chấp nhận.</span>
+            <div class="actions">
+              <button class="button primary" id="save-stocktake-counts" type="button">Lưu tiến độ</button>
+              <button class="button primary" id="complete-stocktake" type="button" disabled>Hoàn tất đợt</button>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>Lịch sử phiếu nhập / xuất</h2>
+              <div class="caption">
+                Tra cứu các phiếu đã lưu để đối chiếu khi kiểm kê.
+              </div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>LOẠI PHIẾU</th>
+                  <th>SỐ PHIẾU</th>
+                  <th>NGÀY</th>
+                  <th>NHÀ CUNG CẤP / BỘ PHẬN</th>
+                  <th>CHI TIẾT MẶT HÀNG</th>
+                  <th>TRẠNG THÁI</th>
+                </tr>
+              </thead>
+              <tbody id="stocktake-voucher-history"></tbody>
             </table>
           </div>
         </section>

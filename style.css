@@ -95,7 +95,7 @@ button {
 }
 .warehouse-name {
   margin-top: 4px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 .warehouse-list {
@@ -176,6 +176,34 @@ main {
   border: 1px solid #d6e0d5;
   background: #e8efe7;
 }
+.stocktake-banner {
+  flex-wrap: wrap;
+  gap: 14px 24px;
+}
+.stocktake-banner-copy {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.stocktake-banner .subtitle {
+  max-width: none;
+}
+.stocktake-banner-actions {
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.stocktake-banner-actions .button {
+  min-height: 36px;
+  padding: 0 12px;
+  color: var(--ink);
+  font-size: 12px;
+  text-decoration: none;
+}
+.stocktake-banner-actions .button.primary {
+  color: #fff;
+}
+
 .eyebrow {
   margin-bottom: 3px;
   color: var(--green);
@@ -200,15 +228,44 @@ h1 {
   flex-shrink: 0;
 }
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: 31px;
   padding: 0 10px;
   border: 1px solid var(--line);
   background: #fff;
+  text-align: center;
   font-size: 10px;
   font-weight: 500;
 }
 .button:hover {
   background: #f4f6f2;
+}
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.stocktake-detail {
+  margin-top: 14px;
+}
+.stocktake-detail-title,
+.stocktake-detail-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.stocktake-detail-title .form-note {
+  margin: 3px 0 0;
+}
+.stocktake-detail-actions {
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+}
+.stocktake-count-input {
+  width: 120px;
 }
 .button-danger {
   border-color: #e8cfcc;
@@ -242,7 +299,7 @@ h1 {
 }
 .metric-label {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 13px;
 }
 .metric-value {
   margin-top: 3px;
@@ -252,7 +309,7 @@ h1 {
 .metric-note {
   margin-top: 2px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 13px;
 }
 .up {
   color: var(--green);
@@ -276,14 +333,14 @@ h2 {
 .caption {
   margin-top: 2px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 13px;
 }
 .link {
   padding: 3px 0;
   border: 0;
   background: none;
   color: var(--green);
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 600;
   text-decoration: none;
 }
@@ -301,7 +358,7 @@ h2 {
   border: 1px solid var(--line);
   border-radius: 0;
   background: #fff;
-  font-size: 10px;
+  font-size: 13px;
   outline: none;
 }
 .field:focus {
@@ -316,7 +373,7 @@ h2 {
 }
 .result-count {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 13px;
 }
 .table-wrap {
   overflow: auto;
@@ -344,7 +401,7 @@ td {
   height: 43px;
   padding: 0 11px;
   border-bottom: 1px solid #e9ece7;
-  font-size: 10px;
+  font-size: 13px;
 }
 tbody tr:last-child td {
   border-bottom: 0;
@@ -358,7 +415,7 @@ tbody tr:hover {
 .sku {
   margin-top: 1px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 13px;
 }
 .qty {
   font-weight: 600;
@@ -368,7 +425,7 @@ tbody tr:hover {
   min-height: 18px;
   align-items: center;
   padding: 0 6px;
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 600;
 }
 .good {
@@ -391,7 +448,7 @@ tbody tr:hover {
   padding: 0 10px;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 9px;
+  font-size: 13px;
 }
 .pages {
   display: flex;
@@ -402,7 +459,7 @@ tbody tr:hover {
   height: 21px;
   border: 1px solid var(--line);
   background: #fff;
-  font-size: 9px;
+  font-size: 13px;
 }
 .page.current {
   border-color: var(--green);
@@ -431,7 +488,7 @@ tbody tr:hover {
   gap: 8px;
   padding: 0 11px;
   border-bottom: 1px solid #e9ece7;
-  font-size: 9px;
+  font-size: 13px;
 }
 .activity {
   grid-template-columns: 45px 1fr auto;
@@ -463,7 +520,7 @@ tbody tr:hover {
   border-top: 1px solid var(--line);
   background: #fff;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 13px;
 }
 .toast {
   position: fixed;
@@ -473,7 +530,7 @@ tbody tr:hover {
   padding: 10px 13px;
   background: #202a24;
   color: white;
-  font-size: 11px;
+  font-size: 13px;
   opacity: 0;
   transform: translateY(6px);
   transition: 0.18s;
@@ -533,7 +590,7 @@ tbody tr:hover {
 }
 .form-field label {
   color: #5d675e;
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 600;
 }
 .form-field input,
@@ -545,7 +602,7 @@ tbody tr:hover {
   border: 1px solid var(--line);
   border-radius: 0;
   background: #fff;
-  font-size: 10px;
+  font-size: 13px;
   outline: none;
 }
 .form-field textarea {
@@ -553,13 +610,68 @@ tbody tr:hover {
   padding: 8px;
   resize: vertical;
 }
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #f4f5f2;
+}
+.login-card {
+  width: min(440px, 100%);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.login-card > .eyebrow,
+.login-card > h1,
+.login-card > .subtitle,
+.login-note {
+  margin-right: 18px;
+  margin-left: 18px;
+}
+.login-card > .eyebrow {
+  margin-top: 20px;
+}
+.login-card > h1 {
+  font-size: 22px;
+}
+.login-form {
+  grid-template-columns: 1fr;
+}
+.login-form .button {
+  width: 100%;
+}
+.login-error {
+  margin: 0;
+  color: var(--red);
+  font-size: 13px;
+}
+.login-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+[hidden] {
+  display: none !important;
+}
 .transaction-form {
   margin-bottom: 16px;
+}
+.transaction-form > .panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 .form-note {
   margin: 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 13px;
 }
 .form-actions {
   display: flex;
@@ -567,6 +679,71 @@ tbody tr:hover {
   justify-content: space-between;
   gap: 12px;
   padding: 0 15px 12px;
+}
+.document-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 0 13px;
+  border-bottom: 1px solid #aeb8ad;
+}
+.document-organization {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.document-warehouse {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.document-title {
+  min-width: 190px;
+  text-align: center;
+}
+.document-title h3 {
+  margin: 0;
+  font-size: 17px;
+  letter-spacing: 0.6px;
+}
+.document-title span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.document-items-detail td {
+  padding: 10px 14px;
+  background: #f7f8f5;
+  color: #505950;
+  font-size: 13px;
+}
+.document-items-detail ol {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 22px;
+}
+.document-items-note {
+  margin: 0 0 7px;
+  color: var(--amber);
+  font-size: 11px;
+  font-weight: 600;
+}
+.voucher-item-count {
+  margin-bottom: 4px;
+  color: #505950;
+  font-size: 11px;
+  font-weight: 600;
+}
+.voucher-items-list {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding-left: 18px;
+  color: #505950;
+  font-size: 12px;
 }
 .button:disabled {
   cursor: not-allowed;
@@ -647,12 +824,16 @@ tbody tr:hover {
     align-items: flex-start;
     padding: 11px;
   }
+
   .subtitle {
     max-width: 220px;
     line-height: 1.4;
   }
   .actions .button:not(.primary) {
     display: none;
+  }
+  .stocktake-banner-actions .button:not(.primary) {
+    display: inline-flex;
   }
   h1 {
     font-size: 17px;
@@ -676,6 +857,73 @@ tbody tr:hover {
   }
   .footer {
     padding: 0 10px;
+  }
+  .document-heading {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .document-title {
+    min-width: 0;
+    width: 100%;
+    text-align: left;
+  }
+}
+@page {
+  size: A4 portrait;
+  margin: 14mm;
+}
+@media print {
+  body {
+    min-width: 0;
+    background: #fff;
+    color: #000;
+  }
+  .topbar,
+  .sidebar,
+  .footer,
+  main > :not(.transaction-form),
+  .transaction-form > .panel-title,
+  .form-actions {
+    display: none !important;
+  }
+  .layout {
+    display: block;
+    min-height: 0;
+  }
+  main {
+    padding: 0;
+  }
+  .transaction-form {
+    margin: 0;
+    border: 0;
+  }
+  .form {
+    gap: 12px 16px;
+    padding: 0;
+  }
+  .form-field label {
+    color: #000;
+  }
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    border: 0;
+    border-bottom: 1px solid #777;
+    background: transparent;
+    color: #000;
+    appearance: none;
+  }
+  .form-field textarea {
+    min-height: 90px;
+  }
+  .document-heading {
+    padding-top: 0;
+    border-bottom: 1px solid #333;
+  }
+  .document-warehouse,
+  .document-title span,
+  .signature span {
+    color: #333;
   }
 }
 .report-transactions {
