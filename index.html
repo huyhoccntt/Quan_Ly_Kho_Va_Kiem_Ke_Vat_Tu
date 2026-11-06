@@ -59,26 +59,26 @@
         <section class="metrics">
           <div class="metric">
             <div class="metric-label">Tổng mã vật tư</div>
-            <div class="metric-value" id="product-count">128</div>
+            <div class="metric-value" id="dashboard-product-count">128</div>
             <div class="metric-note">
               <span class="up">+6</span> mã mới trong tháng
             </div>
           </div>
           <div class="metric">
             <div class="metric-label">Giá trị tồn kho</div>
-            <div class="metric-value">486,2 tr</div>
+            <div class="metric-value" id="dashboard-stock-value">486,2 tr</div>
             <div class="metric-note">Theo giá nhập gần nhất</div>
           </div>
           <div class="metric">
             <div class="metric-label">Sắp hết hàng</div>
-            <div class="metric-value" id="low-count">07</div>
+            <div class="metric-value" id="dashboard-low-count">07</div>
             <div class="metric-note">
               <span class="warn">Cần bổ sung</span> dưới định mức
             </div>
           </div>
           <div class="metric">
             <div class="metric-label">Chờ xác nhận</div>
-            <div class="metric-value">04</div>
+            <div class="metric-value" id="dashboard-pending-count">04</div>
             <div class="metric-note">2 phiếu nhập · 2 phiếu xuất</div>
           </div>
         </section>
@@ -86,7 +86,7 @@
           <div class="section-head">
             <div>
               <h2>Tồn kho vật tư</h2>
-              <div class="caption">Danh sách hàng hóa tại kho trung tâm.</div>
+              <div class="caption" id="dashboard-inventory-caption">Danh sách hàng hóa tại kho trung tâm.</div>
             </div>
             <a class="link" href="vat-tu.html">Xem toàn bộ danh mục →</a>
           </div>
@@ -103,7 +103,7 @@
                   <th>TÌNH TRẠNG</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="dashboard-inventory-list">
                 <tr>
                   <td>VT-00124</td>
                   <td>
@@ -210,7 +210,7 @@
       </main>
     </div>
     <footer class="footer">
-      <span>Hệ thống quản lý kho vật tư</span><span>Kho trung tâm · 2026</span>
+      <span>Hệ thống quản lý kho vật tư</span><span id="dashboard-footer-warehouse">Kho trung tâm · 2026</span>
     </footer>
   </body>
 </html>

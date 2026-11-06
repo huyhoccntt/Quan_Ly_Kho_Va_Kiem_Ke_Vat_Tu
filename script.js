@@ -1,6 +1,8 @@
 (() => {
   const KEYS = {
     session: "inventory-manager.session.v1",
+    theme: "inventory-manager.theme.v1",
+    activeWarehouse: "inventory-manager.active-warehouse.v1",
     inventory: "inventory-manager.inventory.v1",
     suppliers: "inventory-manager.suppliers.v1",
     stocktakes: "inventory-manager.stocktakes.v1",
@@ -12,6 +14,35 @@
     approvedOutbound: "inventory-manager.approved-outbound.v1",
   };
   const demoCredentials = { username: "admin", password: "kho123" };
+  const warehouseInventorySeeds = {
+    "KHO-HCM-02": [
+      { code: "VT-00124", name: "Dây điện Cadivi 2.5mm", group: "Điện công nghiệp", location: "Kệ A-01", quantity: 86, unit: "cuộn", minimum: 40 },
+      { code: "VT-00056", name: "Găng tay bảo hộ phủ PU", group: "Bảo hộ lao động", location: "Kệ B-02", quantity: 14, unit: "đôi", minimum: 30 },
+    ],
+    "KHO-DN-03": [
+      { code: "VT-00102", name: "CB tép 2P 20A LS", group: "Điện công nghiệp", location: "Kệ A-03", quantity: 39, unit: "cái", minimum: 20 },
+      { code: "VT-00093", name: "Mũi khoan thép HSS 8mm", group: "Cơ khí", location: "Kệ C-01", quantity: 4, unit: "cái", minimum: 10 },
+    ],
+  };
+
+  const activeWarehouseCode = () => {
+    const code = read(KEYS.activeWarehouse, "KHO-HN-01");
+    return code === "KHO-HCM-02" || code === "KHO-DN-03" ? code : "KHO-HN-01";
+  };
+
+  const warehouseKey = (key, warehouseCode = activeWarehouseCode()) =>
+    warehouseCode === "KHO-HN-01" ? key : `${key}.${warehouseCode}`;
+
+  const readWarehouse = (key, fallback, warehouseCode) =>
+    read(warehouseKey(key, warehouseCode), fallback);
+
+  const writeWarehouse = (key, value, warehouseCode) =>
+    write(warehouseKey(key, warehouseCode), value);
+
+  const defaultInventoryFor = (warehouseCode, fallback = []) =>
+    warehouseCode === "KHO-HN-01"
+      ? fallback
+      : warehouseInventorySeeds[warehouseCode] || [];
 
   // Đọc dữ liệu JSON đã lưu trong localStorage; báo lỗi và dùng giá trị dự phòng khi cần.
   const read = (key, fallback) => {
@@ -35,6 +66,113 @@
       window.alert("Không thể lưu dữ liệu trên trình duyệt này.");
       return false;
     }
+  };
+
+  const initializeTheme = () => {
+    const savedTheme = read(KEYS.theme, "light");
+    let theme = savedTheme === "dark" ? "dark" : "light";
+    const applyTheme = (value) => {
+      document.documentElement.dataset.theme = value;
+      document.documentElement.style.colorScheme = value;
+    };
+
+    applyTheme(theme);
+    const selector = document.querySelector("#appearance-theme");
+    if (!selector) return;
+    selector.value = theme;
+    selector.addEventListener("change", () => {
+      theme = selector.value === "dark" ? "dark" : "light";
+      applyTheme(theme);
+      write(KEYS.theme, theme);
+    });
+  };
+
+  const setupWarehouseSwitcher = () => {
+    const warehouses = [
+      { code: "ALL", name: "Toàn hệ thống" },
+      { code: "KHO-HN-01", name: "Kho trung tâm · Hà Nội", address: "Cầu Giấy, Hà Nội" },
+      { code: "KHO-HCM-02", name: "Kho miền Nam · TP. Hồ Chí Minh", address: "Bình Tân, TP. Hồ Chí Minh" },
+      { code: "KHO-DN-03", name: "Kho miền Trung · Đà Nẵng", address: "Liên Chiểu, Đà Nẵng" },
+    ];
+    const validCodes = new Set(warehouses.map(({ code }) => code));
+    const workspace = document.querySelector(".warehouse-name");
+    const savedCode = read(KEYS.activeWarehouse, null);
+    const defaultCode = workspace?.textContent.trim() === "Toàn hệ thống"
+      ? "ALL"
+      : "KHO-HN-01";
+    let activeCode = validCodes.has(savedCode) ? savedCode : defaultCode;
+    const getWarehouseName = (code) =>
+      warehouses.find((warehouse) => warehouse.code === code)?.name || warehouses[1].name;
+
+    const applyWarehouse = () => {
+      const activeName = getWarehouseName(activeCode);
+      const currentHeaderLocation = [...document.querySelectorAll(".top-right > span")]
+        .find((span) =>
+          warehouses.some((warehouse) =>
+            span.textContent.includes(warehouse.name.replace(" · Hà Nội", "")),
+          ),
+        );
+      if (currentHeaderLocation) {
+        currentHeaderLocation.textContent = activeName;
+      } else {
+        const header = document.querySelector(".top-right");
+        const locationText = [...(header?.childNodes || [])].find((node) =>
+          node.nodeType === Node.TEXT_NODE &&
+          warehouses.some((warehouse) =>
+            node.textContent.trim().includes(warehouse.name.replace(" · Hà Nội", "")),
+          ),
+        );
+        if (locationText) locationText.textContent = ` ${activeName} `;
+      }
+
+      const transactionWarehouse = activeCode === "ALL" ? "KHO-HN-01" : activeCode;
+      const settingsInputs = document.querySelectorAll(".lower .panel:first-child .form .form-field input");
+      const selectedWarehouse = warehouses.find((warehouse) => warehouse.code === transactionWarehouse);
+      if (settingsInputs.length >= 3 && selectedWarehouse) {
+        settingsInputs[0].value = selectedWarehouse.name.split(" · ")[0];
+        settingsInputs[1].value = selectedWarehouse.code;
+        settingsInputs[2].value = selectedWarehouse.address || "";
+      }
+      document.querySelectorAll('.transaction-form select[name="warehouse"]').forEach((select) => {
+        const option = [...select.options].find((item) =>
+          item.textContent.trim() === getWarehouseName(transactionWarehouse),
+        );
+        if (option) select.value = option.value;
+      });
+      document.querySelectorAll(".document-warehouse").forEach((label) => {
+        label.textContent = getWarehouseName(transactionWarehouse);
+      });
+
+      const details = [...document.querySelectorAll(".warehouse-list details[data-warehouse-code]")];
+      if (details.length) {
+        details.forEach((detail, index) => {
+          detail.open = activeCode === "ALL"
+            ? index === 0
+            : detail.dataset.warehouseCode === activeCode;
+        });
+      }
+    };
+
+    document.querySelectorAll(".warehouse-name").forEach((name) => {
+      const selector = document.createElement("select");
+      selector.className = "warehouse-name warehouse-switcher";
+      selector.setAttribute("aria-label", "Chọn kho làm việc");
+      warehouses.forEach(({ code, name: label }) => {
+        const option = document.createElement("option");
+        option.value = code;
+        option.textContent = label;
+        selector.append(option);
+      });
+      selector.value = activeCode;
+      selector.addEventListener("change", () => {
+        activeCode = selector.value;
+        if (!write(KEYS.activeWarehouse, activeCode)) return;
+        window.location.reload();
+      });
+      name.replaceWith(selector);
+    });
+
+    applyWarehouse();
   };
 
   // Tạo một ô bảng an toàn bằng textContent và thêm vào hàng.
@@ -154,7 +292,12 @@
   const setupInventory = () => {
     const tbody = document.querySelector("#inventory-list");
     if (!tbody) return;
-    const items = read(KEYS.inventory, parseInventoryRows(tbody));
+    const warehouseCode = activeWarehouseCode();
+    const items = readWarehouse(
+      KEYS.inventory,
+      defaultInventoryFor(warehouseCode, parseInventoryRows(tbody)),
+      warehouseCode,
+    );
     if (!Array.isArray(items)) {
       window.alert("Danh mục vật tư lưu trữ không hợp lệ.");
       return;
@@ -188,6 +331,27 @@
       });
       const count = document.querySelector("#product-count");
       if (count) count.textContent = String(items.length);
+      const inventoryCount = document.querySelector("#inventory-product-count");
+      if (inventoryCount) inventoryCount.textContent = String(items.length);
+      const activeName = document.querySelector(".warehouse-switcher")?.selectedOptions[0]?.textContent ||
+        "Kho trung tâm · Hà Nội";
+      const inventoryCaption = document.querySelector("main .section-head .caption");
+      if (inventoryCaption) inventoryCaption.textContent = `Danh sách vật tư tại ${activeName}.`;
+      const groupNote = document.querySelector(".metrics .metric:first-child .metric-note");
+      if (groupNote) {
+        const groupCount = new Set(items.map((item) => item.group)).size;
+        groupNote.textContent = `Trong ${groupCount} nhóm hàng tại kho này`;
+      }
+      const emptyItems = items.filter((item) => item.quantity <= 0).length;
+      const inStockCount = document.querySelector("#inventory-in-stock-count");
+      if (inStockCount) inStockCount.textContent = String(items.length - emptyItems);
+      const inStockNote = document.querySelector(".metrics .metric:nth-child(2) .metric-note");
+      if (inStockNote) inStockNote.textContent = "Có số lượng tồn kho";
+      const lowItemCount = items.filter((item) => item.quantity > 0 && item.quantity < item.minimum).length;
+      const inventoryLowCount = document.querySelector("#inventory-low-count");
+      if (inventoryLowCount) inventoryLowCount.textContent = String(lowItemCount).padStart(2, "0");
+      const inventoryEmptyCount = document.querySelector("#inventory-empty-count");
+      if (inventoryEmptyCount) inventoryEmptyCount.textContent = String(emptyItems).padStart(2, "0");
       const lows = document.querySelector("#low-count");
       if (lows)
         lows.textContent = String(
@@ -212,7 +376,7 @@
         return;
       }
       const next = [...items, item];
-      if (!write(KEYS.inventory, next)) return;
+      if (!writeWarehouse(KEYS.inventory, next, warehouseCode)) return;
       items.push(item);
       render();
       form.reset();
@@ -235,43 +399,417 @@
     });
   };
 
+  const setupDashboardWarehouseData = () => {
+    const tbody = document.querySelector("#dashboard-inventory-list");
+    if (!tbody) return;
+    const warehouseCode = activeWarehouseCode();
+    const fallback = [...tbody.rows].map((row) => {
+      const quantityText = row.cells[4].textContent.trim();
+      const quantity = Number(quantityText.match(/[\d,.]+/)?.[0]?.replaceAll(",", "")) || 0;
+      const unit = row.cells[1].querySelector(".sku")?.textContent.trim() ||
+        quantityText.replace(/[\d,.]+\s*/, "").trim();
+      return {
+        code: row.cells[0].textContent.trim(),
+        name: row.cells[1].querySelector(".product")?.textContent.trim() || row.cells[1].textContent.trim(),
+        group: row.cells[2].textContent.trim(),
+        location: row.cells[3].textContent.trim(),
+        quantity,
+        unit,
+        minimum: Number(row.cells[5].textContent.match(/[\d,.]+/)?.[0]?.replaceAll(",", "")) || 0,
+      };
+    });
+    const inventory = readWarehouse(
+      KEYS.inventory,
+      defaultInventoryFor(warehouseCode, fallback),
+      warehouseCode,
+    );
+    if (!Array.isArray(inventory)) {
+      window.alert("Danh mục vật tư của kho đang chọn không hợp lệ.");
+      return;
+    }
+
+    tbody.replaceChildren();
+    inventory.forEach((item) => {
+      const row = document.createElement("tr");
+      cell(row, item.code);
+      const name = cell(row, "");
+      const product = document.createElement("div");
+      product.className = "product";
+      product.textContent = item.name;
+      const unit = document.createElement("div");
+      unit.className = "sku";
+      unit.textContent = item.unit;
+      name.append(product, unit);
+      cell(row, item.group);
+      cell(row, item.location);
+      const quantity = cell(row, "");
+      const quantityValue = document.createElement("span");
+      quantityValue.className = "qty";
+      quantityValue.textContent = String(item.quantity);
+      quantity.append(quantityValue, document.createTextNode(` ${item.unit}`));
+      cell(row, `${item.minimum} ${item.unit}`);
+      const status = cell(row, "");
+      const badge = document.createElement("span");
+      const [label, className] =
+        item.quantity <= 0
+          ? ["Hết hàng", "empty"]
+          : item.quantity < item.minimum
+            ? ["Sắp hết", "low"]
+            : ["Còn hàng", "good"];
+      badge.className = `status ${className}`;
+      badge.textContent = label;
+      status.append(badge);
+      tbody.append(row);
+    });
+
+    const warehouseName = document.querySelector(".warehouse-switcher")?.selectedOptions[0]?.textContent ||
+      "Kho trung tâm · Hà Nội";
+    const caption = document.querySelector("#dashboard-inventory-caption");
+    if (caption) caption.textContent = `Danh sách hàng hóa tại ${warehouseName}.`;
+    const footer = document.querySelector("#dashboard-footer-warehouse");
+    if (footer) footer.textContent = `${warehouseName} · 2026`;
+    const eyebrow = document.querySelector("main .banner .eyebrow");
+    if (eyebrow) eyebrow.textContent = `Tổng quan · ${warehouseName}`;
+    const count = document.querySelector("#dashboard-product-count");
+    if (count) count.textContent = String(inventory.length);
+    const countNote = count?.parentElement.querySelector(".metric-note");
+    if (countNote) countNote.textContent = "Mã vật tư tại kho này";
+    const lowItems = inventory.filter((item) => item.quantity < item.minimum);
+    const lowCount = document.querySelector("#dashboard-low-count");
+    if (lowCount) lowCount.textContent = String(lowItems.length).padStart(2, "0");
+    const lowNote = lowCount?.parentElement.querySelector(".metric-note");
+    if (lowNote) lowNote.textContent = "Dưới định mức tại kho này";
+
+    if (warehouseCode !== "KHO-HN-01") {
+      const stockValue = document.querySelector("#dashboard-stock-value");
+      if (stockValue) stockValue.textContent = "—";
+      const stockNote = stockValue?.parentElement.querySelector(".metric-note");
+      if (stockNote) stockNote.textContent = "Chưa có dữ liệu giá trị của kho này";
+      const pendingReceipts = readWarehouse(KEYS.createdReceipts, [], warehouseCode);
+      const pendingOutbound = readWarehouse(KEYS.createdOutbound, [], warehouseCode);
+      const approvedReceipts = readWarehouse(KEYS.approvedReceipts, {}, warehouseCode);
+      const approvedOutbound = readWarehouse(KEYS.approvedOutbound, {}, warehouseCode);
+      const pendingCount = [...(Array.isArray(pendingReceipts) ? pendingReceipts : []),
+        ...(Array.isArray(pendingOutbound) ? pendingOutbound : [])]
+        .filter((record) =>
+          String(record.status || "").startsWith("Chờ") &&
+          !approvedReceipts?.[record.number] &&
+          !approvedOutbound?.[record.number],
+        ).length;
+      const pending = document.querySelector("#dashboard-pending-count");
+      if (pending) pending.textContent = String(pendingCount).padStart(2, "0");
+      const pendingNote = pending?.parentElement.querySelector(".metric-note");
+      if (pendingNote) pendingNote.textContent = "Phiếu chờ xử lý tại kho này";
+
+      const activityPanel = document.querySelector(".lower .panel");
+      if (activityPanel) {
+        activityPanel.querySelectorAll(".activity").forEach((activity) => activity.remove());
+        const recent = [
+          ...(Array.isArray(pendingReceipts) ? pendingReceipts : []).map((record) => ({
+            ...record,
+            type: "NHẬP KHO",
+            detail: record.supplier,
+            value: `+${record.itemCount || 0} mặt hàng`,
+          })),
+          ...(Array.isArray(pendingOutbound) ? pendingOutbound : []).map((record) => ({
+            ...record,
+            type: "XUẤT KHO",
+            detail: record.department,
+            value: `-${record.itemCount || 0} mặt hàng`,
+          })),
+        ].slice(-3).reverse();
+        if (recent.length) {
+          recent.forEach((record) => {
+            const activity = document.createElement("div");
+            activity.className = "activity";
+            const time = document.createElement("span");
+            time.className = "time";
+            time.textContent = record.date || "—";
+            const detail = document.createElement("span");
+            const type = document.createElement("span");
+            type.className = record.type === "XUẤT KHO" ? "type out" : "type";
+            type.textContent = record.type;
+            detail.append(type, document.createTextNode(` · ${record.detail || "Giao dịch"}`));
+            const value = document.createElement("strong");
+            value.textContent = record.value;
+            activity.append(time, detail, value);
+            activityPanel.append(activity);
+          });
+        } else {
+          const activity = document.createElement("div");
+          activity.className = "activity";
+          activity.textContent = "Chưa có giao dịch tại kho này.";
+          activityPanel.append(activity);
+        }
+      }
+      const lowPanel = document.querySelector(".lower .panel:last-child");
+      if (lowPanel) {
+        lowPanel.querySelectorAll(".stock-line").forEach((line) => line.remove());
+        if (lowItems.length) {
+          lowItems.forEach((item) => {
+            const line = document.createElement("div");
+            line.className = "stock-line";
+            const name = document.createElement("strong");
+            name.textContent = item.name;
+            const quantity = document.createElement("span");
+            quantity.className = "stock-note";
+            quantity.textContent = `${item.quantity} / ${item.minimum} ${item.unit}`;
+            line.append(name, quantity);
+            lowPanel.append(line);
+          });
+        } else {
+          const line = document.createElement("div");
+          line.className = "stock-line";
+          line.textContent = "Không có vật tư dưới định mức.";
+          lowPanel.append(line);
+        }
+      }
+    }
+  };
+
+  const setupWarehouseReport = () => {
+    if (!document.querySelector(".report-transactions") || activeWarehouseCode() === "KHO-HN-01") {
+      return;
+    }
+    const warehouseCode = activeWarehouseCode();
+    const inventory = readWarehouse(
+      KEYS.inventory,
+      warehouseInventorySeeds[warehouseCode] || [],
+      warehouseCode,
+    );
+    const receipts = readWarehouse(KEYS.createdReceipts, [], warehouseCode);
+    const outbound = readWarehouse(KEYS.createdOutbound, [], warehouseCode);
+    if (!Array.isArray(inventory) || !Array.isArray(receipts) || !Array.isArray(outbound)) {
+      window.alert("Dữ liệu báo cáo của kho đang chọn không hợp lệ.");
+      return;
+    }
+    const reportMetrics = document.querySelector("main > .metrics");
+    const summaries = [
+      `${Array.isArray(receipts) ? receipts.length : 0} phiếu nhập ghi nhận`,
+      `${Array.isArray(outbound) ? outbound.length : 0} phiếu xuất ghi nhận`,
+      "Chưa có dữ liệu giá trị",
+      "Chưa đủ dữ liệu tính toán",
+    ];
+    reportMetrics?.querySelectorAll(".metric").forEach((metric, index) => {
+      const value = metric.querySelector(".metric-value");
+      const note = metric.querySelector(".metric-note");
+      if (value) value.textContent = "—";
+      if (note) note.textContent = summaries[index] || "Chưa có dữ liệu tại kho này";
+    });
+
+    document.querySelectorAll(".closing-report .metrics .metric").forEach((metric) => {
+      const value = metric.querySelector(".metric-value");
+      const note = metric.querySelector(".metric-note");
+      if (value) value.textContent = "—";
+      if (note) note.textContent = "Chưa có dữ liệu chốt kho tại chi nhánh này";
+    });
+    const closingCaption = document.querySelector(".closing-report .section-head .caption");
+    const warehouseName = document.querySelector(".warehouse-switcher")?.selectedOptions[0]?.textContent ||
+      "Kho đang chọn";
+    if (closingCaption) {
+      closingCaption.textContent = `${new Intl.DateTimeFormat("vi-VN").format(new Date())} · ${warehouseName} · Chưa chốt kho`;
+    }
+    document.querySelectorAll(".closing-report tbody, .report-transactions tbody").forEach((tbody) => {
+      tbody.replaceChildren();
+      const row = document.createElement("tr");
+      const empty = cell(row, "Chưa có dữ liệu giao dịch tại kho này.");
+      empty.colSpan = tbody.closest("table").tHead?.rows[0].cells.length || 1;
+      tbody.append(row);
+    });
+
+    const stockGroups = new Map();
+    inventory.forEach((item) => {
+      const group = item.group || "Khác";
+      stockGroups.set(group, (stockGroups.get(group) || 0) + 1);
+    });
+    const groupPanel = document.querySelector(".lower .panel");
+    if (groupPanel) {
+      groupPanel.querySelectorAll(".stock-line").forEach((line) => line.remove());
+      if (stockGroups.size) {
+        stockGroups.forEach((count, group) => {
+          const line = document.createElement("div");
+          line.className = "stock-line";
+          const name = document.createElement("strong");
+          name.textContent = group;
+          const total = document.createElement("span");
+          total.className = "stock-note";
+          total.textContent = `${count} mã`;
+          line.append(name, total);
+          groupPanel.append(line);
+        });
+      } else {
+        const line = document.createElement("div");
+        line.className = "stock-line";
+        line.textContent = "Chưa có danh mục vật tư.";
+        groupPanel.append(line);
+      }
+    }
+    const warningPanel = document.querySelector(".lower .panel:last-child");
+    if (warningPanel) {
+      warningPanel.querySelectorAll(".stock-line").forEach((line) => line.remove());
+      const items = inventory;
+      const warnings = [
+        ["Dưới định mức", items.filter((item) => item.quantity > 0 && item.quantity < item.minimum).length, "low"],
+        ["Hết hàng", items.filter((item) => item.quantity <= 0).length, "empty"],
+      ];
+      warnings.forEach(([label, count, className]) => {
+        const line = document.createElement("div");
+        line.className = "stock-line";
+        const name = document.createElement("strong");
+        name.textContent = label;
+        const status = document.createElement("span");
+        status.className = `status ${className}`;
+        status.textContent = `${count} mã`;
+        line.append(name, status);
+        warningPanel.append(line);
+      });
+    }
+  };
+
+  const setupWarehouseSummaries = () => {
+    const warehouseCode = activeWarehouseCode();
+    if (warehouseCode === "KHO-HN-01") return;
+    const metrics = document.querySelectorAll("main > .metrics .metric");
+    const updateMetric = (index, value, note) => {
+      const metric = metrics[index];
+      if (!metric) return;
+      const valueElement = metric.querySelector(".metric-value");
+      const noteElement = metric.querySelector(".metric-note");
+      if (valueElement) valueElement.textContent = value;
+      if (noteElement) noteElement.textContent = note;
+    };
+
+    const receipts = readWarehouse(KEYS.createdReceipts, [], warehouseCode);
+    const approvedReceipts = readWarehouse(KEYS.approvedReceipts, {}, warehouseCode);
+    if (document.querySelector("#receipt-form") && Array.isArray(receipts)) {
+      const pending = receipts.filter((record) =>
+        !approvedReceipts?.[record.number] && record.status === "Chờ xác nhận",
+      ).length;
+      const value = receipts.reduce((sum, record) => {
+        const amount = String(record.value || "").replace(/[^\d]/g, "");
+        return sum + (Number(amount) || 0);
+      }, 0);
+      updateMetric(0, String(receipts.length).padStart(2, "0"), "Phiếu nhập tại kho này");
+      updateMetric(1, String(pending).padStart(2, "0"), "Cần kiểm tra hàng");
+      updateMetric(2, String(receipts.length - pending).padStart(2, "0"), "Đã xác nhận");
+      updateMetric(3, `${new Intl.NumberFormat("vi-VN").format(value)} đ`, "Tổng giá trị phiếu đã ghi nhận");
+    }
+
+    const outbound = readWarehouse(KEYS.createdOutbound, [], warehouseCode);
+    const approvedOutbound = readWarehouse(KEYS.approvedOutbound, {}, warehouseCode);
+    if (document.querySelector("#outbound-form") && Array.isArray(outbound)) {
+      const pending = outbound.filter((record) =>
+        !approvedOutbound?.[record.number] && record.status === "Chờ duyệt",
+      ).length;
+      const completed = outbound.length - pending;
+      const departments = new Map();
+      outbound.forEach((record) => {
+        const department = record.department || "Chưa xác định";
+        departments.set(department, (departments.get(department) || 0) + 1);
+      });
+      const mostRequested = [...departments.entries()]
+        .sort((left, right) => right[1] - left[1])[0]?.[0] || "—";
+      updateMetric(0, String(outbound.length).padStart(2, "0"), "Phiếu xuất tại kho này");
+      updateMetric(1, String(pending).padStart(2, "0"), "Cần quản lý xác nhận");
+      updateMetric(2, String(completed).padStart(2, "0"), "Đã xử lý");
+      updateMetric(3, mostRequested, "Bộ phận nhận nhiều nhất");
+    }
+
+    const batches = readWarehouse(KEYS.stocktakes, [], warehouseCode);
+    if (document.querySelector("#stocktake-list") && Array.isArray(batches)) {
+      const complete = batches.filter((batch) => batch.status === "Hoàn tất").length;
+      const ongoing = batches.length - complete;
+      const differences = batches.filter((batch) =>
+        batch.difference && batch.difference !== "Không" && batch.difference !== "—",
+      ).length;
+      updateMetric(0, String(batches.length).padStart(2, "0"), "Tại kho đang chọn");
+      updateMetric(1, String(complete).padStart(2, "0"), "Đã đối chiếu");
+      updateMetric(2, String(ongoing).padStart(2, "0"), "Đang thực hiện");
+      updateMetric(3, String(differences).padStart(2, "0"), "Mã hàng cần xác nhận");
+    }
+  };
+
   // Đồng bộ danh sách vật tư giữa các kho và hiển thị số lượng/trạng thái liên quan.
   const setupWarehouses = () => {
     const warehouseTables = [...document.querySelectorAll("[data-warehouse-code] tbody")];
     if (!warehouseTables.length) return;
-    const inventory = read(KEYS.inventory, null);
-    if (inventory !== null && !Array.isArray(inventory)) {
-      window.alert("Danh mục vật tư lưu trữ không hợp lệ.");
-      return;
-    }
     const catalogByCode = new Map();
-    warehouseTables.forEach((tbody) => {
-      [...tbody.rows].forEach((row) => {
-        const [code, name] = [...row.cells].map((item) => item.textContent.trim());
-        if (code && !catalogByCode.has(code)) {
-          catalogByCode.set(code, { code, name });
-        }
-      });
-    });
-    (inventory || []).forEach((item) => {
-      if (!catalogByCode.has(item.code)) catalogByCode.set(item.code, item);
-    });
+    const staticRowsByWarehouse = new Map();
     warehouseTables.forEach((tbody) => {
       const warehouseCode = tbody.closest("[data-warehouse-code]").dataset.warehouseCode;
-      const existingCodes = new Set(
-        [...tbody.rows].map((row) => row.cells[0].textContent.trim()),
+      const staticRows = new Map();
+      [...tbody.rows].forEach((row) => {
+        const [code, name, location, stock, status] = [...row.cells].map((item) => item.textContent.trim());
+        if (!code) return;
+        const quantity = stock.match(/[\d,.]+/)?.[0];
+        const unit = stock.replace(/[\d,.]+\s*/, "").trim();
+        const item = quantity
+          ? {
+              code,
+              name,
+              location,
+              quantity: Number(quantity.replaceAll(",", "")) || 0,
+              unit,
+              status,
+            }
+          : null;
+        staticRows.set(code, item);
+        if (!catalogByCode.has(code)) catalogByCode.set(code, { code, name });
+      });
+      staticRowsByWarehouse.set(warehouseCode, staticRows);
+    });
+
+    const inventoryByWarehouse = new Map();
+    warehouseTables.forEach((tbody) => {
+      const warehouseCode = tbody.closest("[data-warehouse-code]").dataset.warehouseCode;
+      const staticInventory = [...(staticRowsByWarehouse.get(warehouseCode)?.values() || [])]
+        .filter(Boolean)
+        .map((item) => {
+          const minimums = {
+            "VT-00124": 40,
+            "VT-00087": 50,
+            "VT-00056": 30,
+            "VT-00102": 20,
+            "VT-00031": 25,
+            "VT-00093": 10,
+          };
+          return {
+            ...item,
+            group: "",
+            minimum: minimums[item.code] || 0,
+          };
+        });
+      const inventory = readWarehouse(
+        KEYS.inventory,
+        defaultInventoryFor(warehouseCode, staticInventory),
+        warehouseCode,
       );
-      catalogByCode.forEach((item, code) => {
-        if (existingCodes.has(code)) return;
-        const isCentral = warehouseCode === "KHO-HN-01" && inventory?.some((saved) => saved.code === code);
+      if (!Array.isArray(inventory)) {
+        window.alert(`Danh mục vật tư của kho ${warehouseCode} lưu trữ không hợp lệ.`);
+        return;
+      }
+      inventoryByWarehouse.set(warehouseCode, new Map(inventory.map((item) => [item.code, item])));
+      inventory.forEach((item) => {
+        if (!catalogByCode.has(item.code)) catalogByCode.set(item.code, item);
+      });
+    });
+
+    warehouseTables.forEach((tbody) => {
+      const warehouseCode = tbody.closest("[data-warehouse-code]").dataset.warehouseCode;
+      const inventory = inventoryByWarehouse.get(warehouseCode);
+      const staticRows = staticRowsByWarehouse.get(warehouseCode);
+      tbody.replaceChildren();
+      catalogByCode.forEach((catalogItem, code) => {
+        const item = inventory?.get(code);
+        const staticItem = staticRows?.get(code);
         const row = document.createElement("tr");
         cell(row, code);
-        cell(row, item.name);
-        cell(row, isCentral ? item.location : "Chưa cập nhật");
-        cell(row, isCentral ? `${item.quantity} ${item.unit}` : "Chưa cập nhật");
+        cell(row, item?.name || catalogItem.name);
+        cell(row, item?.location || staticItem?.location || "Chưa cập nhật");
+        cell(row, item ? `${item.quantity} ${item.unit}` : staticItem ? `${staticItem.quantity} ${staticItem.unit}` : "Chưa cập nhật");
         const status = cell(row, "");
         const badge = document.createElement("span");
-        if (isCentral) {
+        if (item) {
           const [label, className] =
             item.quantity <= 0
               ? ["Hết hàng", "empty"]
@@ -280,6 +818,9 @@
                 : ["Còn hàng", "good"];
           badge.className = `status ${className}`;
           badge.textContent = label;
+        } else if (staticItem) {
+          badge.className = `status ${staticItem.status.includes("Sắp hết") ? "low" : staticItem.status.includes("Hết hàng") ? "empty" : "good"}`;
+          badge.textContent = staticItem.status;
         } else {
           badge.className = "status";
           badge.textContent = "Chưa cập nhật";
@@ -447,13 +988,15 @@
     const form = document.querySelector("#stocktake-form");
     const panel = document.querySelector("#stocktake-form-panel");
     if (!tbody) return;
+    const warehouseCode = activeWarehouseCode();
+    if (warehouseCode !== "KHO-HN-01") tbody.replaceChildren();
     const button = document.querySelector("#show-stocktake-form");
     button?.addEventListener("click", () => {
       panel.hidden = false;
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
       document.querySelector("#stocktake-area")?.focus();
     });
-    const batches = read(KEYS.stocktakes, []);
+    const batches = readWarehouse(KEYS.stocktakes, [], warehouseCode);
     if (!Array.isArray(batches)) {
       window.alert("Danh sách đợt kiểm kê lưu trữ không hợp lệ.");
       return;
@@ -466,7 +1009,11 @@
       { code: "VT-00031", name: "Băng keo cách điện Nano", quantity: 8, unit: "cuộn", minimum: 25 },
       { code: "VT-00093", name: "Mũi khoan thép HSS 8mm", quantity: 0, unit: "cái", minimum: 10 },
     ];
-    const inventory = read(KEYS.inventory, defaultItems);
+    const inventory = readWarehouse(
+      KEYS.inventory,
+      defaultInventoryFor(warehouseCode, defaultItems),
+      warehouseCode,
+    );
     if (!Array.isArray(inventory)) {
       window.alert("Danh mục vật tư lưu trữ không hợp lệ.");
       return;
@@ -585,7 +1132,7 @@
       };
       const nextBatches = batches.filter((batch) => batch.number !== updated.number);
       nextBatches.push(updated);
-      if (!write(KEYS.stocktakes, nextBatches)) return;
+      if (!writeWarehouse(KEYS.stocktakes, nextBatches, warehouseCode)) return;
       batches.splice(0, batches.length, ...nextBatches);
       records.set(updated.number, updated);
       activeBatch = updated;
@@ -724,7 +1271,7 @@
           counted: null,
         })),
       };
-      if (!write(KEYS.stocktakes, [...batches, batch])) return;
+      if (!writeWarehouse(KEYS.stocktakes, [...batches, batch], warehouseCode)) return;
       batches.push(batch);
       renderBatch(batch);
       form.reset();
@@ -771,12 +1318,12 @@
     }
     const voucherHistory = document.querySelector("#stocktake-voucher-history");
     if (voucherHistory) {
-      const savedReceipts = read(KEYS.createdReceipts, []);
-      const deletedReceipts = read(KEYS.deletedReceipts, []);
-      const approvedReceipts = read(KEYS.approvedReceipts, {});
-      const savedOutbound = read(KEYS.createdOutbound, []);
-      const deletedOutbound = read(KEYS.deletedOutbound, []);
-      const approvedOutbound = read(KEYS.approvedOutbound, {});
+      const savedReceipts = readWarehouse(KEYS.createdReceipts, [], warehouseCode);
+      const deletedReceipts = readWarehouse(KEYS.deletedReceipts, [], warehouseCode);
+      const approvedReceipts = readWarehouse(KEYS.approvedReceipts, {}, warehouseCode);
+      const savedOutbound = readWarehouse(KEYS.createdOutbound, [], warehouseCode);
+      const deletedOutbound = readWarehouse(KEYS.deletedOutbound, [], warehouseCode);
+      const approvedOutbound = readWarehouse(KEYS.approvedOutbound, {}, warehouseCode);
       if (
         !Array.isArray(savedReceipts) ||
         !Array.isArray(deletedReceipts) ||
@@ -791,7 +1338,7 @@
       ) {
         window.alert("Lịch sử phiếu nhập/xuất lưu trữ không hợp lệ.");
       }
-      const receiptRecords = new Map([
+      const receiptRecords = new Map(warehouseCode === "KHO-HN-01" ? [
         ["PN-2026-0084", {
           number: "PN-2026-0084",
           date: "29/09/2026",
@@ -819,7 +1366,7 @@
           status: "Hoàn tất",
           sample: true,
         }],
-      ]);
+      ] : []);
       (Array.isArray(savedReceipts) ? savedReceipts : []).forEach((record) => {
         if (!Array.isArray(deletedReceipts) || !deletedReceipts.includes(record.number)) {
           receiptRecords.set(record.number, {
@@ -832,7 +1379,7 @@
       if (Array.isArray(deletedReceipts)) {
         deletedReceipts.forEach((number) => receiptRecords.delete(number));
       }
-      const outboundRecords = new Map([
+      const outboundRecords = new Map(warehouseCode === "KHO-HN-01" ? [
         ["PX-2026-0117", {
           number: "PX-2026-0117",
           date: "29/09/2026",
@@ -860,7 +1407,7 @@
           status: "Đã xuất",
           sample: true,
         }],
-      ]);
+      ] : []);
       (Array.isArray(savedOutbound) ? savedOutbound : []).forEach((record) => {
         if (!Array.isArray(deletedOutbound) || !deletedOutbound.includes(record.number)) {
           outboundRecords.set(record.number, {
@@ -925,11 +1472,13 @@
     const form = document.querySelector("#receipt-form");
     const tbody = document.querySelector("#receipt-history");
     if (!form || !tbody) return;
-    const createdKey = KEYS.createdReceipts;
-    const deletedKey = KEYS.deletedReceipts;
-    const created = read(createdKey, []);
-    const deletedValues = read(deletedKey, []);
-    const approved = read(KEYS.approvedReceipts, {});
+    const warehouseCode = activeWarehouseCode();
+    if (warehouseCode !== "KHO-HN-01") tbody.replaceChildren();
+    const createdKey = warehouseKey(KEYS.createdReceipts, warehouseCode);
+    const deletedKey = warehouseKey(KEYS.deletedReceipts, warehouseCode);
+    const created = readWarehouse(KEYS.createdReceipts, [], warehouseCode);
+    const deletedValues = readWarehouse(KEYS.deletedReceipts, [], warehouseCode);
+    const approved = readWarehouse(KEYS.approvedReceipts, {}, warehouseCode);
     if (
       !Array.isArray(created) ||
       !Array.isArray(deletedValues) ||
@@ -1004,7 +1553,7 @@
       const number = row.dataset.documentId;
       if (!number || row.cells[7]?.textContent.trim() !== "Chờ xác nhận") return;
       const nextApproved = { ...approved, [number]: approver };
-      if (!write(KEYS.approvedReceipts, nextApproved)) return;
+      if (!writeWarehouse(KEYS.approvedReceipts, nextApproved, warehouseCode)) return;
       Object.assign(approved, nextApproved);
       row.cells[6].textContent = approver;
       const badge = row.cells[7].querySelector(".status");
@@ -1085,7 +1634,7 @@
       const numbers = [...tbody.rows].map((row) => row.dataset.documentId);
       const highest = [...numbers, ...deleted].reduce((max, value) => {
         return Math.max(max, Number(value.match(/(\d+)$/)?.[0] || 0));
-      }, 84);
+      }, warehouseCode === "KHO-HN-01" ? 84 : 0);
       return `PN-${new Date().getFullYear()}-${String(highest + 1).padStart(4, "0")}`;
     };
     numberInput.value = nextNumber();
@@ -1098,6 +1647,7 @@
       const lines = String(values.get("items")).split(/\r?\n/).filter((line) => line.trim());
       const record = {
         number,
+        warehouseCode,
         date: formatDate(String(values.get("date"))),
         supplier: String(values.get("supplier")),
         itemCount: String(lines.length).padStart(2, "0"),
@@ -1150,9 +1700,11 @@
     const form = document.querySelector("#outbound-form");
     const tbody = document.querySelector("#outbound-history");
     if (!form || !tbody) return;
-    const created = read(KEYS.createdOutbound, []);
-    const deletedValues = read(KEYS.deletedOutbound, []);
-    const approved = read(KEYS.approvedOutbound, {});
+    const warehouseCode = activeWarehouseCode();
+    if (warehouseCode !== "KHO-HN-01") tbody.replaceChildren();
+    const created = readWarehouse(KEYS.createdOutbound, [], warehouseCode);
+    const deletedValues = readWarehouse(KEYS.deletedOutbound, [], warehouseCode);
+    const approved = readWarehouse(KEYS.approvedOutbound, {}, warehouseCode);
     if (
       !Array.isArray(created) ||
       !Array.isArray(deletedValues) ||
@@ -1236,7 +1788,7 @@
       const number = row.dataset.documentId;
       if (!number || row.cells[6]?.textContent.trim() !== "Chờ duyệt") return;
       const nextApproved = { ...approved, [number]: approver };
-      if (!write(KEYS.approvedOutbound, nextApproved)) return;
+      if (!writeWarehouse(KEYS.approvedOutbound, nextApproved, warehouseCode)) return;
       Object.assign(approved, nextApproved);
       row.cells[5].textContent = approver;
       const badge = row.cells[6].querySelector(".status");
@@ -1330,6 +1882,7 @@
       const lines = String(values.get("items")).split(/\r?\n/).filter((line) => line.trim());
       const record = {
         number: String(values.get("number")),
+        warehouseCode,
         date: formatDate(String(values.get("date"))),
         department: String(values.get("department")),
         itemCount: String(lines.length).padStart(2, "0"),
@@ -1338,7 +1891,7 @@
         approver: String(values.get("approver")) || session.name || session.username,
         status: "Chờ duyệt",
       };
-      if (!write(KEYS.createdOutbound, [...created, record])) return;
+      if (!writeWarehouse(KEYS.createdOutbound, [...created, record], warehouseCode)) return;
       created.push(record);
       recordsByNumber.set(record.number, record);
       render(record);
@@ -1366,7 +1919,7 @@
         return;
       }
       if (!window.confirm(`Bạn có chắc muốn xóa phiếu ${number}?`)) return;
-      if (!write(KEYS.deletedOutbound, [...deleted, number])) return;
+      if (!writeWarehouse(KEYS.deletedOutbound, [...deleted, number], warehouseCode)) return;
       deleted.add(number);
       if (row.nextElementSibling?.classList.contains("document-items-detail")) {
         row.nextElementSibling.remove();
@@ -1384,6 +1937,7 @@
 
   // Chạy các phần khởi tạo phù hợp sau khi HTML tải xong.
   document.addEventListener("DOMContentLoaded", () => {
+    initializeTheme();
     if (initializeLogin()) return;
     const session = guardSession();
     if (!session) return;
@@ -1400,13 +1954,17 @@
       });
     });
     setupHeader(session);
+    setupWarehouseSwitcher();
     const today = document.querySelector("#today");
     if (today) today.textContent = new Intl.DateTimeFormat("vi-VN", { dateStyle: "full" }).format(new Date());
     setupInventory();
+    setupDashboardWarehouseData();
+    setupWarehouseReport();
     setupWarehouses();
     setupSuppliers();
     setupStocktakes();
     setupReceiptHistory(session);
     setupOutboundHistory(session);
+    setupWarehouseSummaries();
   });
 })();
